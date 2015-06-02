@@ -1,0 +1,77 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="card-rep.html">
+
+<dom-module id="triad-card">
+  <style>
+	.grid {
+		border: 1px solid gray;
+		padding: 5px;
+		width:70px;
+		height:70px;
+		@apply(--layout-vertical);
+		@apply(--layout-around-justified);
+	}
+	.row {
+		@apply(--layout-horizontal);
+		@apply(--layout-around-justified);
+	}
+	.value-input {
+		width: 16px;
+		text-align: center;
+	}
+	.no-show {
+		visibility: hidden;
+	}
+	.red {
+		background-color: pink;
+	}
+	.blue {
+		background-color: lightblue;
+	}
+
+  </style>
+  <template>
+  	<div id="grid" class="grid">
+  		<div class="row">
+		  	<input class="value-input no-show"></input>
+	  		<input is="iron-input" bind-value="{{top}}" type="text" title="" class="value-input"></input>
+	  		<input is="iron-input" bind-value="{{element}}" type="text" class="value-input"></input>
+		</div>
+		<div class="row">
+	  		<input is="iron-input" bind-value="{{left}}" type="text" class="value-input"></input>
+	  		<span bind-value="{{modifier}}" class="card-modifier-value"></span>
+	  		<input is="iron-input" bind-value="{{right}}" type="text" class="value-input"></input>
+	  	</div>
+	  	<div class="row">
+	  		<input id="bottom-value" is="iron-input" bind-value="{{bottom}}" type="text" class="value-input"></input>
+	  	</div>
+  	</div>
+  </template>
+</dom-module>
+<script>
+	Polymer({
+		is: 'triad-card',
+		properties: {
+			color: {
+				type: String,
+				observer: 'colorChanged'
+			},
+			top: Number,
+			left: Number,
+			right: Number,
+			bottom: Number,
+			element: String,
+			modifier: Number
+		},
+		colorChanged: function(newColor, oldColor) {
+			this.$.grid.classList.remove(oldColor);
+			this.$.grid.classList.add(newColor);
+		},
+		rep: function () {
+			var cardRep = new CardRep(parseInt(this.top), parseInt(this.left), parseInt(this.right), parseInt(this.bottom), this.element, parseInt(this.modifier));
+			return cardRep;
+		}
+	})
+</script>

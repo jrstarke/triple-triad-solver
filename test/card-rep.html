@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/card-rep.html">
+  </head>
+  <body>
+    <script>
+      suite('card-rep', function() {
+        test('rank rule surrounded by lower cards should flip them all', function() {
+          otherCards = new CardRep(4,4,4,4,"",0,"blue");
+          placingCard = new CardRep(5,5,5,5,"",0,"red");
+
+          adjacentCards = {
+            top: otherCards,
+            left: otherCards,
+            right: otherCards,
+            bottom: otherCards
+          }
+
+          expected = ['top','left','bottom','right'];
+
+          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('rank rule surrounded by equal cards should flip none', function() {
+          otherCards = new CardRep(5,5,5,5,"",0,"blue");
+          placingCard = new CardRep(5,5,5,5,"",0,"red");
+
+          adjacentCards = {
+            top: otherCards,
+            left: otherCards,
+            right: otherCards,
+            bottom: otherCards
+          }
+
+          expected = [];
+
+          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('rank rule surrounded by lower cards of ours should flip none', function() {
+          otherCards = new CardRep(4,4,4,4,"",0,"red");
+          placingCard = new CardRep(5,5,5,5,"",0,"red");
+
+          adjacentCards = {
+            top: otherCards,
+            left: otherCards,
+            right: otherCards,
+            bottom: otherCards
+          }
+
+          expected = [];
+
+          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('rank rule lower card on right', function() {
+          otherCards = new CardRep(5,4,5,5,"",0,"blue");
+          placingCard = new CardRep(5,5,5,5,"",0,"red");
+
+          adjacentCards = {
+            top: otherCards,
+            left: otherCards,
+            right: otherCards,
+            bottom: otherCards
+          }
+
+          expected = ["right"];
+
+          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('same rule flip both', function() {
+          otherCards = new CardRep(3,3,4,5,"",0,"blue");
+          placingCard = new CardRep(1,5,3,3,"",0,"red");
+
+          adjacentCards = {
+            right: otherCards,
+            bottom: otherCards
+          }
+
+          expected = ["right","bottom"];
+
+          cardsToFlip = placingCard.applyRules(["same"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('same rule flip theirs', function() {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
+
+          theirCard = new CardRep(9,3,6,7,"",0,"blue");
+          ourOtherCard = new CardRep(3,3,4,5,"",0,"red");
+          placingCard = new CardRep(1,5,3,3,"",0,"red");
+
+          adjacentCards = {
+            right: theirCard,
+            bottom: ourOtherCard
+          }
+
+          expected = ["right"];
+
+          cardsToFlip = placingCard.applyRules(["same"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('plus rule flip both', function() {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
+
+          theirCardTop = new CardRep(9,3,6,7,"",0,"blue");
+          theirCardRight = new CardRep(9,2,10,4,"",0,"blue");
+          placingCard = new CardRep(1,7,6,4,"",0,"red");
+
+          adjacentCards = {
+            top: theirCardTop,
+            right: theirCardRight
+          }
+
+          expected = ["right","top"];
+
+          cardsToFlip = placingCard.applyRules(["plus"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+        test('plus rule flip theirs', function() {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
+
+          theirCardTop = new CardRep(9,3,6,7,"",0,"blue");
+          ourCardRight = new CardRep(9,2,10,4,"",0,"red");
+          placingCard = new CardRep(1,7,6,4,"",0,"red");
+
+          adjacentCards = {
+            top: theirCardTop,
+            right: ourCardRight
+          }
+
+          expected = ["top"];
+
+          cardsToFlip = placingCard.applyRules(["plus"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+      });
+    </script>
+
+  </body>
+</html>

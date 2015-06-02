@@ -1,0 +1,26 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="triad-hand.html" />
+<link rel="import" href="triad-board.html" />
+
+<dom-module id="triad-solver">
+	<style>
+    .horizontal {
+      @apply(--layout-horizontal)
+    }
+	</style>
+
+  <template>
+    <div class="horizontal">
+      <triad-hand color="red"></triad-hand>
+      <triad-board></triad-board>
+      <triad-hand color="blue"></triad-hand>
+    </div>
+  </template>
+  <script>
+  	Polymer({
+  		is: "triad-solver"
+  	});
+  </script>
+</polymer-element>
