@@ -1,0 +1,41 @@
+<link rel="import"
+      href="../bower_components/polymer/polymer.html">
+<!-- import the iron-input custom element -->
+<link rel="import"
+      href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="test-element">
+  <style>
+    .value-input {
+      width: 16px;
+    }
+    .horizontal {
+      @apply(--layout-horizontal)
+    }
+  </style>
+  <template>
+    <div class="horizontal">
+      <div>
+        This is <strong>{{owner}}</strong>'s editable-name-tag.
+      </div>
+      <!-- iron-input exposes a two-way bindable input value -->
+      <div>
+        <input class="value-input" is="iron-input" bind-value="{{owner}}"
+        placeholder="Your name here...">
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: "test-element",
+    properties: {
+      owner: {
+        type: String,
+        value: "Daniel"
+      }
+    }
+  });
+</script>

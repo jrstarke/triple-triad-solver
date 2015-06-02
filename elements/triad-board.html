@@ -1,0 +1,117 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="board-rep.html">
+
+<dom-module id="triad-board">
+  	<style>
+  		.grid {
+  			border: 1px solid gray;
+  			padding: 5px;
+  			@apply(--layout-vertical)
+  			@apply(--layout-around-justified)
+  			@apply(--layout-center)
+  		}
+  		.row {
+  			@apply(--layout-horizontal)
+  			@apply(--layout-around-justified)
+  		}
+  		.cell {
+  			height: 80px;
+  			width: 80px;
+  			border: 1px solid lightgray;
+  			margin: 10px;
+  		}
+  		.value-input {
+  			width: 16px;
+  			text-align: center;
+  		}
+  		.no-show {
+  			visibility: hidden;
+  		}
+  		.dropzone {
+  			height: 100%;
+  			width: 100%;
+  			margin: 0;
+  			padding: 0;
+  		}
+
+  	</style>
+
+  <template>
+  	<div class="grid">
+  		<div class="row">
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		</div>
+  		<div class="row">
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		</div>
+		<div class="row">
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		  	<div class="cell" center center-justified layout>
+		  		<div class="dropzone" on-dragover="allowDrop" on-drop="drop"></div>
+		  	</div>
+		</div>
+  	</div>
+  </template>
+</dom-module>
+<script>
+  	Polymer({
+  		is: "triad-board",
+  		allowDrop: function (e) {
+  			e.preventDefault();
+  		},
+  		drop: function (e) {
+  			e.preventDefault();
+  			var draggedElement = triad_solver.dragged_element;
+
+  			var dropElement = e.target;
+  			var cell = dropElement.parentElement;
+
+  			cell.insertBefore(draggedElement, dropElement);
+  			cell.removeChild(dropElement);
+  		},
+  		rep: function () {
+  			cards = [];
+
+  			var rows = this.getElementsByClassName('triad-board row');
+  			for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+  				row = rows[rowIndex];
+
+  				columns = row.getElementsByClassName('triad-board cell');
+  				cards[rowIndex] = Array(columns.length);
+  				for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+  					column = columns[columnIndex];
+
+  					cardElems = column.getElementsByTagName("triad-card");
+  					if (cardElems.length > 0) {
+  						cards[rowIndex][columnIndex] = cardElems[0].rep();
+  					}
+  				}
+  			}
+
+  			var boardRep = new BoardRep(cards);
+  			return boardRep;
+  		}
+  	});
+</script>

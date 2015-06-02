@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="triad-card.html" />
+
+<dom-module id="triad-hand">
+  <style>
+    .hand {
+      width: 80px;
+      @apply(--layout-vertical)
+      @apply(--layout-justified)
+    }
+  </style>
+  <template>
+    <div class="hand">
+      <template is="dom-repeat" items="{{repeatitions(5)}}">
+        <triad-card on-dragstart="handleDrag" draggable="{{ colorIsRed() }}" color="{{color}}"></triad-card>
+      </template>
+    </div>
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: "triad-hand",
+    properties: {
+      color: String
+    },
+    repeatitions: function (num) {
+      return Array.apply(null, {length: num}).map(Number.call, Number)
+    },
+    colorIsRed: function () {
+      return this.color === "red";
+    },
+    handleDrag: function(e) {
+      window.triad_solver.dragged_element = e.srcElement;
+    }
+  })
+</script>

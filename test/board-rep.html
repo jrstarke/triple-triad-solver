@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/board-rep.html">
+  </head>
+  <body>
+    <script>
+      suite('board-rep', function() {
+        test('board count 1 each', function () {
+          topLeftCard = new CardRep(5,5,5,5,"",0,"blue");
+          bottomRightCard = new CardRep(5,5,5,5,"",0,"red");
+
+          cards = [
+            [topLeftCard,null,null],
+            [null,null,null],
+            [null,null,bottomRightCard]
+          ]
+
+          var expectedCounts = {
+            red: 1, 
+            blue: 1
+          }
+
+          var boardRep = new BoardRep(cards);
+
+          var boardCounts = boardRep.getCardCounts();
+
+          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal')
+        });
+        test('board count 2 red 3 blue', function () {
+          topLeftCard = new CardRep(5,5,5,5,"",0,"blue");
+          topRightCard = new CardRep(5,5,5,5,"",0,"red");
+
+          centerCenterCard = new CardRep(5,5,5,5,"",0,"blue");
+
+          bottomLeftCard = new CardRep(5,5,5,5,"",0,"red");
+          bottomRightCard = new CardRep(5,5,5,5,"",0,"blue");
+
+          cards = [
+            [topLeftCard,null,topRightCard],
+            [null,centerCenterCard,null],
+            [bottomLeftCard,null,bottomRightCard]
+          ]
+
+          var expectedCounts = {
+            red: 2, 
+            blue: 3
+          }
+
+          var boardRep = new BoardRep(cards);
+
+          var boardCounts = boardRep.getCardCounts();
+
+          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal')
+        });
+        test('rank rule surrounded by lower cards should flip them all', function() {
+          topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
+          topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
+          topRightCard = new CardRep(3,3,4,5,"",0,"blue");
+
+          centerLeftCard = new CardRep(9,3,6,7,"",0,"blue");
+          centerCenterCard = new CardRep(3,10,1,10,"",0,"blue");
+          centerRightCard = new CardRep(2,5,3,1,"",0,"blue");
+
+          bottomCenterCard = new CardRep(9,2,10,4,"",0,"blue");
+          bottomRightCard = new CardRep(1,5,3,3,"",0,"blue");
+
+          cards = [
+            [topLeftCard,topCenterCard,topRightCard],
+            [centerLeftCard,centerCenterCard,centerRightCard],
+            [null,bottomCenterCard,bottomRightCard]
+          ]
+
+          boardRep = BoardRep(cards)
+          expected = ['top','left','bottom','right'];
+
+          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
+          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
+        });
+      });
+    </script>
+  </body>
+</html>
