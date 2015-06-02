@@ -22,18 +22,18 @@
             [topLeftCard,null,null],
             [null,null,null],
             [null,null,bottomRightCard]
-          ]
+          ];
 
           var expectedCounts = {
             red: 1, 
             blue: 1
-          }
+          };
 
           var boardRep = new BoardRep(cards);
 
           var boardCounts = boardRep.getCardCounts();
 
-          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal')
+          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal');
         });
         test('board count 2 red 3 blue', function () {
           topLeftCard = new CardRep(5,5,5,5,"",0,"blue");
@@ -48,18 +48,73 @@
             [topLeftCard,null,topRightCard],
             [null,centerCenterCard,null],
             [bottomLeftCard,null,bottomRightCard]
-          ]
+          ];
 
           var expectedCounts = {
             red: 2, 
             blue: 3
-          }
+          };
 
           var boardRep = new BoardRep(cards);
 
           var boardCounts = boardRep.getCardCounts();
 
-          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal')
+          assert.deepEqual(boardCounts, expectedCounts, 'board counts equal');
+        });
+        test('adjacent cards surrounded', function() {
+          topCenterCard = new CardRep(1,1,1,1,"",0,"blue");
+          centerLeftCard = new CardRep(2,2,2,2,"",0,"blue");
+          centerRightCard = new CardRep(3,3,3,3,"",0,"blue");
+          bottomCenterCard = new CardRep(4,4,4,4,"",0,"blue");
+
+          cards = [
+            [null,topCenterCard,null],
+            [centerLeftCard,null,centerRightCard],
+            [null,bottomCenterCard,null]
+          ];
+
+          boardRep = new BoardRep(cards);
+          expected = {
+            "top": topCenterCard,
+            "left": centerLeftCard,
+            "right": centerRightCard,
+            "bottom": bottomCenterCard
+          };          
+
+          adjacentCards = boardRep.getAdjacentCards(1,1);
+          assert.deepEqual(adjacentCards, expected, '4 adjacent cards');
+        });
+        test('adjacent cards corner', function() {
+          topCenterCard = new CardRep(1,1,1,1,"",0,"blue");
+          centerLeftCard = new CardRep(2,2,2,2,"",0,"blue");
+
+          cards = [
+            [null,topCenterCard,null],
+            [centerLeftCard,null,null],
+            [null,null,null]
+          ];
+
+          boardRep = new BoardRep(cards);
+          expected = {
+            "right": topCenterCard,
+            "bottom": centerLeftCard
+          };          
+
+          adjacentCards = boardRep.getAdjacentCards(0,0);
+          assert.deepEqual(adjacentCards, expected, '2 adjacent cards expected');
+        });
+        test('adjacent cards center none', function() {
+          cards = [
+            [null,null,null],
+            [null,null,null],
+            [null,null,null]
+          ]
+
+          boardRep = new BoardRep(cards);
+          expected = {};          
+
+          adjacentCards = boardRep.getAdjacentCards(1,1);
+          assert.deepEqual(adjacentCards, expected, 'expect no adjacent cards');
         });
         test('rank rule surrounded by lower cards should flip them all', function() {
           topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
@@ -79,7 +134,7 @@
             [null,bottomCenterCard,bottomRightCard]
           ]
 
-          boardRep = BoardRep(cards)
+          boardRep = new BoardRep(cards)
           expected = ['top','left','bottom','right'];
 
           cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);

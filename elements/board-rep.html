@@ -32,7 +32,35 @@
         return a.concat(b);
       }).reduce(function (previous,current) {
         previous[current.color] = (previous[current.color] || 0) + current.sum
-        return previous
+        return previous;
+      },{});
+    },
+    getAdjacentCards: function (rowPosition,columnPosition) {
+      var positions = {
+        "r-1c0": "top",
+        "r0c-1": "left",
+        "r0c1": "right",
+        "r1c0": "bottom"
+      };
+
+      return this.cards.map(function (row, rowIndex) {
+        return row.map(function (card, cardIndex) {
+          var positionIdentifier = "r" + (rowIndex - rowPosition) + "c" + (cardIndex - columnPosition);
+
+          if (card && positionIdentifier in positions) {
+            return {
+              position: positions[positionIdentifier], 
+              card: card
+            };
+          }
+        }).filter(function (element) {
+          return element;
+        });
+      }).reduce(function (a,b) {
+        return a.concat(b);
+      }).reduce(function (previous,current) {
+        previous[current.position] = current.card;
+        return previous;
       },{});
     }
 	});
