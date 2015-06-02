@@ -1,4 +1,4 @@
-# TT Solver
+# Triple Triad Solver
 
 This project is a work in progress solver for a mid-game within a game I'm 
 playing.
