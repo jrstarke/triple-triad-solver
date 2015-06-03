@@ -13,13 +13,13 @@
       color: String
     },
     factoryImpl: function(top, left, right, bottom, element, modifier, color) {
-        this.top = top;
-        this.left = left;
-        this.right = right;
-        this.bottom = bottom;
-        this.element = element;
-        this.modifier = modifier;
-        this.color = color;
+        this.top = top || null;
+        this.left = left || null;
+        this.right = right || null;
+        this.bottom = bottom || null;
+        this.element = element || "";
+        this.modifier = modifier || 0;
+        this.color = color || "";
       },
       adjacencyDictToObjects: function(adjacencyDict) {
         return Object.keys(adjacencyDict).map(function(position) {
