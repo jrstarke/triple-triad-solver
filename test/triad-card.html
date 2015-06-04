@@ -19,7 +19,9 @@
       var container = document.querySelector('#container');
       suite('<triad-card>', function() {
         test('blank card representation', function () {
+          container.innerHTML = "";
           var card = document.createElement('triad-card');
+          container.appendChild(card);
 
           var expected = new CardRep();
           var cardRepresentation = card.rep();
@@ -33,7 +35,10 @@
           assert.equal(cardRepresentation.color, expected.color, 'Color value should be the same');
         });
         test('full card representation', function () {
+          container.innerHTML = "";
           var card = document.createElement('triad-card');
+          container.appendChild(card);
+          
           card.top = "1";
           card.left = "2";
           card.right = "3";
