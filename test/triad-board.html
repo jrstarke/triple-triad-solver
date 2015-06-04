@@ -21,21 +21,6 @@
       var origin = document.querySelector('#origin');
       var container = document.querySelector('#container');
       suite('<triad-board>', function() {
-        test('enable allowDrow', function () {
-          container.innerHTML = "";
-          var board = document.createElement('triad-board');
-          container.appendChild(board);
-
-          var callback = sinon.spy();
-
-          var event = {
-            preventDefault: callback
-          };
-
-          board.allowDrop(event);
-
-          assert(callback.calledOnce);
-        });
         test('accept drop', function () {
           container.innerHTML = "";
           var board = document.createElement('triad-board');
@@ -52,16 +37,13 @@
           var dropzone = board.querySelector(".dropzone");
           var cell = dropzone.parentElement;
 
-          var callback = sinon.spy();
-
           var event = {
-            preventDefault: callback,
+            preventDefault: function () {},
             target: dropzone
           };
 
           board.drop(event);
 
-          assert(callback.calledOnce);
           assert.equal(card.parentElement, cell, 'The card should now be in the board cell');
         });
       });
