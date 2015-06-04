@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/triad-board.html">
+    <link rel="import" href="../elements/triad-card.html">
+    <link rel="import" href="../elements/card-rep.html">
+  </head>
+  <body>
+
+    <div id="origin"></div>
+    <div id="container"></div>
+
+    <script>
+      var origin = document.querySelector('#origin');
+      var container = document.querySelector('#container');
+      suite('<triad-board>', function() {
+        test('accept drop', function () {
+          container.innerHTML = "";
+          var board = document.createElement('triad-board');
+          container.appendChild(board);
+
+          origin.innerHTML = "";
+          var card = document.createElement('triad-card');
+          origin.appendChild(card);
+
+          window.triad_solver = {
+            dragged_element: card
+          };
+
+          var dropzone = board.querySelector(".dropzone");
+          var cell = dropzone.parentElement;
+
+          var event = {
+            preventDefault: function () {},
+            target: dropzone
+          };
+
+          board.drop(event);
+
+          assert.equal(card.parentElement, cell, 'The card should now be in the board cell');
+        });
+      });
+    </script>
+  </body>
+</html>
