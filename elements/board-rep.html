@@ -35,6 +35,22 @@
         return previous;
       },{});
     },
+    getAvailableSpaces: function () {
+      return this.cards.map(function (row, rowIndex) {
+        return row.map(function (card, colIndex) {
+          if (!card) {
+            return {
+              row: rowIndex,
+              column: colIndex
+            };
+          }
+        }).filter(function (space) {
+          return space;
+        });
+      }).reduce(function (a,b) {
+        return a.concat(b);
+      },[]);
+    },
     getAdjacentCards: function (rowPosition,columnPosition) {
       var positions = {
         "r-1c0": "top",

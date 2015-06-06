@@ -116,6 +116,49 @@
           adjacentCards = boardRep.getAdjacentCards(1,1);
           assert.deepEqual(adjacentCards, expected, 'expect no adjacent cards');
         });
+        test('available spaces empty board', function() {
+          cards = [
+            [null,null,null],
+            [null,null,null],
+            [null,null,null]
+          ]
+
+          boardRep = new BoardRep(cards)
+          expected = [
+            {row: 0, column: 0},
+            {row: 0, column: 1},
+            {row: 0, column: 2},
+            {row: 1, column: 0},
+            {row: 1, column: 1},
+            {row: 1, column: 2},
+            {row: 2, column: 0},
+            {row: 2, column: 1},
+            {row: 2, column: 2}
+          ];
+
+          var availableSpaces = boardRep.getAvailableSpaces();
+          assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
+        });
+        test('available spaces first middle last filled', function() {
+          cards = [
+            [new CardRep(),null,null],
+            [null,new CardRep(),null],
+            [null,null,new CardRep()]
+          ]
+
+          boardRep = new BoardRep(cards)
+          expected = [
+            {row: 0, column: 1},
+            {row: 0, column: 2},
+            {row: 1, column: 0},
+            {row: 1, column: 2},
+            {row: 2, column: 0},
+            {row: 2, column: 1}
+          ];
+
+          var availableSpaces = boardRep.getAvailableSpaces();
+          assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
+        });
         test('rank rule surrounded by lower cards should flip them all', function() {
           topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
           topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
