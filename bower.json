@@ -1,0 +1,23 @@
+{
+  "name": "triple-triad-solver",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jrstarke/triple-triad-solver",
+  "authors": [
+    "Jamie Starke <git@jamiestarke.com>"
+  ],
+  "description": "A Solver for the Triple Triad mini-game",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.1",
+    "iron-input": "PolymerElements/iron-input#~1.0.1",
+    "web-component-tester": "Polymer/web-component-tester#~3.1.3",
+    "polymer": "Polymer/polymer#^1.0.0"
+  }
+}
