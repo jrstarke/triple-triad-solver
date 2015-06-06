@@ -159,30 +159,6 @@
           var availableSpaces = boardRep.getAvailableSpaces();
           assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
         });
-        test('rank rule surrounded by lower cards should flip them all', function() {
-          topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
-          topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
-          topRightCard = new CardRep(3,3,4,5,"",0,"blue");
-
-          centerLeftCard = new CardRep(9,3,6,7,"",0,"blue");
-          centerCenterCard = new CardRep(3,10,1,10,"",0,"blue");
-          centerRightCard = new CardRep(2,5,3,1,"",0,"blue");
-
-          bottomCenterCard = new CardRep(9,2,10,4,"",0,"blue");
-          bottomRightCard = new CardRep(1,5,3,3,"",0,"blue");
-
-          cards = [
-            [topLeftCard,topCenterCard,topRightCard],
-            [centerLeftCard,centerCenterCard,centerRightCard],
-            [null,bottomCenterCard,bottomRightCard]
-          ]
-
-          boardRep = new BoardRep(cards)
-          expected = ['top','left','bottom','right'];
-
-          cardsToFlip = placingCard.applyRules(["rank"],adjacentCards);
-          assert.sameMembers(cardsToFlip, expected, 'flipped cards');
-        });
       });
     </script>
   </body>
