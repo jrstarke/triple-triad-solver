@@ -159,7 +159,7 @@
           var availableSpaces = boardRep.getAvailableSpaces();
           assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
         });
-        test('rank rule surrounded by lower cards should flip them all', function() {
+        test('Placing a single card and applying same, plus and combos should flip all cards', function() {
           // Based on the example from http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Combo
           topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
           topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
