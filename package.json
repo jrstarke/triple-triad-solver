@@ -4,6 +4,10 @@
   "author": "Jamie Starke",  
   "license": "MIT",
   "scripts": {
-    "test": "wct"
+    "test": "wct --plugin sauce"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "bower": "*"
   }
 }
