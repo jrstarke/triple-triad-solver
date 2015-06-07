@@ -159,6 +159,54 @@
           var availableSpaces = boardRep.getAvailableSpaces();
           assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
         });
+        test('rank rule surrounded by lower cards should flip them all', function() {
+          // Based on the example from http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Combo
+          topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
+          topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
+          topRightCard = new CardRep(3,3,4,5,"",0,"blue");
+
+          centerLeftCard = new CardRep(9,3,6,7,"",0,"blue");
+          centerCenterCard = new CardRep(3,10,1,10,"",0,"blue");
+          centerRightCard = new CardRep(2,5,3,1,"",0,"blue");
+
+          bottomCenterCard = new CardRep(9,2,10,4,"",0,"blue");
+          bottomRightCard = new CardRep(1,5,3,3,"",0,"blue");
+
+          cards = [
+            [topLeftCard,topCenterCard,topRightCard],
+            [centerLeftCard,centerCenterCard,centerRightCard],
+            [null,bottomCenterCard,bottomRightCard]
+          ]
+
+          rulesInPlay = ["rank","same","plus"];
+
+          boardRep = new BoardRep(cards,rulesInPlay);
+
+          expected = [
+            [
+              {row: 1, column: 0},
+              {row: 2, column: 1}
+            ],
+            [
+              {row: 0, column: 0},
+              {row: 2, column: 2}
+            ],
+            [
+              {row: 0, column: 1}
+            ],
+            [
+              {row: 0, column: 2},
+              {row: 1, column: 1}
+            ],
+            [
+              {row: 1, column: 2}
+            ]
+          ];
+
+          cardFlipSets = boardRep.getPlacementFlips(2,0,placingCard);
+
+          assert.sameDeepMembers(cardFlipSets, expected, 'flipped cards');
+        });
       });
     </script>
   </body>
