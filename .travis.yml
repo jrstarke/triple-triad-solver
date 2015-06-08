@@ -13,5 +13,7 @@ before_install:
   -in ssh_deploy_key.enc -out ssh_deploy_key -d
 after_success:
 - chmod 600 ssh_deploy_key
+- eval "$(ssh-agent)"
 - ssh-add ssh_deploy_key
+- chmod 755 scripts/deploy.sh
 - scripts/deploy.sh
