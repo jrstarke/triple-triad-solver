@@ -4,5 +4,6 @@ set -e # exit with nonzero exit code if anything fails
 REVISION=`git rev-parse --abbrev-ref HEAD`
 
 if [ "$REVISION" == "master" ]; then 
-	git push --force origin gh-pages
+	# For deployment, send the current paster to the Github Pages
+	git push --force origin master:gh-pages
 fi
