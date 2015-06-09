@@ -20,15 +20,27 @@
     <script>
       var origin = document.querySelector('#origin');
       var container = document.querySelector('#container');
+
+      function getBoardElement() {
+        container.innerHTML = "";
+        var board = document.createElement('triad-board');
+        container.appendChild(board);
+
+        return board;
+      }
+
+      function getCardElement() {
+        origin.innerHTML = "";
+        var card = document.createElement('triad-card');
+        origin.appendChild(card);
+
+        return card;
+      }
+
       suite('<triad-board>', function() {
         test('accept drop', function () {
-          container.innerHTML = "";
-          var board = document.createElement('triad-board');
-          container.appendChild(board);
-
-          origin.innerHTML = "";
-          var card = document.createElement('triad-card');
-          origin.appendChild(card);
+          var board = getBoardElement();
+          var card = getCardElement();
 
           window.triad_solver = {
             dragged_element: card
@@ -45,6 +57,37 @@
           board.drop(event);
 
           assert.equal(card.parentElement, cell, 'The card should now be in the board cell');
+        });
+        test('cards', function () {
+          var board = getBoardElement();
+
+          var cells = board.getElementsByClassName('triad-board cell');
+          function placeCard (card, row, column) {
+            var position = (row * 3) + column;
+
+            var cell = cells[position];
+            var dropzone = cell.getElementsByClassName('dropzone')[0];
+
+            cell.replaceChild(card,dropzone);
+          }
+
+          var card1 = getCardElement();
+          var card2 = getCardElement();
+          var card3 = getCardElement();
+
+          placeCard(card1,0,0);
+          placeCard(card2,1,1);
+          placeCard(card3,2,2);
+          
+          expected = [
+            {row: 0, column: 0, card: card1},
+            {row: 1, column: 1, card: card2},
+            {row: 2, column: 2, card: card3}
+          ];
+
+          cards = board.getCards();
+
+          assert.sameDeepMembers(cards, expected, "The cards should be right down the diagonal")
         });
       });
     </script>

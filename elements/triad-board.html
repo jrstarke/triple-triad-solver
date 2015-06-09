@@ -91,6 +91,31 @@
   			cell.insertBefore(draggedElement, dropElement);
   			cell.removeChild(dropElement);
   		},
+      getCards: function () {
+        var cards = [];
+
+        var rows = this.getElementsByClassName('triad-board row');
+        for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+          var row = rows[rowIndex];
+          
+          var columns = row.getElementsByClassName('triad-board cell');
+          for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            var column = columns[columnIndex];
+
+            cardElems = column.getElementsByTagName("triad-card");
+            if (cardElems.length > 0) {
+              var card = cardElems[0];
+              cards.push({
+                row: rowIndex,
+                column: columnIndex,
+                card: card
+              });
+            }
+          }
+        }
+        
+        return cards;
+      },
   		rep: function () {
   			cards = [];
 
@@ -98,7 +123,7 @@
   			for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
   				row = rows[rowIndex];
 
-  				columns = row.getElementsByClassName('triad-board cell');
+  				var columns = row.getElementsByClassName('triad-board cell');
   				cards[rowIndex] = Array(columns.length);
   				for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
   					column = columns[columnIndex];
