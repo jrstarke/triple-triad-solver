@@ -69,6 +69,16 @@
 			this.$.grid.classList.remove(oldColor);
 			this.$.grid.classList.add(newColor);
 		},
+		flip: function () {
+			colorFlipMap = {
+				red: "blue",
+				blue: "red"
+			}
+
+			if (this.color in colorFlipMap) {
+				this.color = colorFlipMap[this.color];
+			}
+		},
 		rep: function () {
 			var cardRep = new CardRep(parseInt(this.top), parseInt(this.left), parseInt(this.right), parseInt(this.bottom), this.element, parseInt(this.modifier), this.color);
 			return cardRep;

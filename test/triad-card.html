@@ -17,11 +17,18 @@
 
     <script>
       var container = document.querySelector('#container');
+
+      function createCardElement () {
+        container.innerHTML = "";
+        var card = document.createElement('triad-card');
+        container.appendChild(card);
+
+        return card;
+      }
+
       suite('<triad-card>', function() {
         test('blank card representation', function () {
-          container.innerHTML = "";
-          var card = document.createElement('triad-card');
-          container.appendChild(card);
+          var card = createCardElement();
 
           var expected = new CardRep();
           var cardRepresentation = card.rep();
@@ -35,9 +42,7 @@
           assert.equal(cardRepresentation.color, expected.color, 'Color value should be the same');
         });
         test('full card representation', function () {
-          container.innerHTML = "";
-          var card = document.createElement('triad-card');
-          container.appendChild(card);
+          var card = createCardElement();
           
           card.top = "1";
           card.left = "2";
@@ -59,9 +64,7 @@
           assert.equal(cardRepresentation.color, expected.color, 'Color value should be the same');
         });
         test('color change', function () {
-          container.innerHTML = "";
-          var card = document.createElement('triad-card');
-          container.appendChild(card);
+          var card = createCardElement();
           
           var classes = card.$.grid.className;
           assert.notInclude(classes, "red", "The card shouldn't have a color class set");
@@ -76,6 +79,31 @@
           classes = card.$.grid.className;
           assert.include(classes, "red", "The card should have a color class set");
           assert.notInclude(classes, "blue", "The card shouldn't have a color class set");
+        });
+        test('color flip: no color', function () {
+          var card = createCardElement();
+
+          var expectedColor = card.color;
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should not change");
+        });
+        test('color flip: the color should change, and back', function () {
+          var card = createCardElement();
+          card.color = "red";
+
+          var expectedColor = "blue";
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should change to blue");
+
+          expectedColor = "red";
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should change to red");
         });
       });
     </script>
