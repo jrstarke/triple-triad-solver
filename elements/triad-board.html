@@ -117,23 +117,20 @@
         return cards;
       },
   		rep: function () {
-  			cards = [];
+        var size = 3;
 
-  			var rows = this.getElementsByClassName('triad-board row');
-  			for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-  				row = rows[rowIndex];
+        var cards = new Array(size);
+        for (var i = 0; i < size; i++) {
+          cards[i] = Array(size);
+        }
 
-  				var columns = row.getElementsByClassName('triad-board cell');
-  				cards[rowIndex] = Array(columns.length);
-  				for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-  					column = columns[columnIndex];
-
-  					cardElems = column.getElementsByTagName("triad-card");
-  					if (cardElems.length > 0) {
-  						cards[rowIndex][columnIndex] = cardElems[0].rep();
-  					}
-  				}
-  			}
+        cards = this.getCards().map(function (cell) {
+          cell.card = cell.card.rep();
+          return cell;
+        }).reduce(function (cardBoard,cell) {
+          cardBoard[cell.row][cell.column] = cell.card;
+          return cardBoard;
+        },cards);
 
   			var boardRep = new BoardRep(cards);
   			return boardRep;

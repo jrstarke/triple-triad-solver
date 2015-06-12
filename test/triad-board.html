@@ -11,6 +11,7 @@
     <link rel="import" href="../elements/triad-board.html">
     <link rel="import" href="../elements/triad-card.html">
     <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/board-rep.html">
   </head>
   <body>
 
@@ -79,15 +80,51 @@
           placeCard(card2,1,1);
           placeCard(card3,2,2);
           
-          expected = [
+          var expected = [
             {row: 0, column: 0, card: card1},
             {row: 1, column: 1, card: card2},
             {row: 2, column: 2, card: card3}
           ];
 
-          cards = board.getCards();
+          var cards = board.getCards();
 
-          assert.sameDeepMembers(cards, expected, "The cards should be right down the diagonal")
+          assert.sameDeepMembers(cards, expected, "The cards should be right down the diagonal");
+        });
+        test('rep', function () {
+          var board = getBoardElement();
+
+          var cells = board.getElementsByClassName('triad-board cell');
+          function placeCard (card, row, column) {
+            var position = (row * 3) + column;
+
+            var cell = cells[position];
+            var dropzone = cell.getElementsByClassName('dropzone')[0];
+
+            cell.replaceChild(card,dropzone);
+          }
+
+          var card1 = getCardElement();
+          var card2 = getCardElement();
+          var card3 = getCardElement();
+
+          placeCard(card1,0,0);
+          placeCard(card2,1,1);
+          placeCard(card3,2,2);
+          
+          var cards = [
+            new Array(3),
+            new Array(3),
+            new Array(3)
+          ];
+          cards[0][0] = new CardRep();
+          cards[1][1] = new CardRep();
+          cards[2][2] = new CardRep();
+
+          var expected = new BoardRep(cards).objectify();
+
+          var boardRep = board.rep().objectify();
+
+          assert.deepEqual(boardRep, expected, "The board rep should be consistent");
         });
       });
     </script>
