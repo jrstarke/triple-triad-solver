@@ -16,4 +16,4 @@ after_success:
 - eval "$(ssh-agent)"
 - ssh-add ssh_deploy_key
 - chmod 755 scripts/deploy.sh
-- scripts/deploy.sh
+- sh scripts/deploy.sh
