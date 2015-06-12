@@ -18,6 +18,17 @@
 
       this.cards = cards;
     },
+    objectify: function () {
+      return {
+        cards: this.cards.map(function (row) {
+          return row.map(function (card) {
+            if (card) {
+              return card.objectify();
+            }
+          });
+        })
+      };
+    },
     getCardCounts: function () {
        return this.cards.map(function (row) {
         return row.filter(function (card) {
