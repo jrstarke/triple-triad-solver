@@ -21,6 +21,17 @@
         this.modifier = modifier || 0;
         this.color = color || "";
       },
+      objectify: function () {
+        return {
+          top: this.top,
+          left: this.left,
+          right: this.right,
+          bottom: this.bottom,
+          element: this.element,
+          modifier: this.modifier,
+          color: this.color
+        };
+      },
       adjacencyDictToObjects: function(adjacencyDict) {
         return Object.keys(adjacencyDict).map(function(position) {
           return {
