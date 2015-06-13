@@ -13,114 +13,116 @@
       color: String
     },
     factoryImpl: function(top, left, right, bottom, element, modifier, color) {
-        this.top = top || null;
-        this.left = left || null;
-        this.right = right || null;
-        this.bottom = bottom || null;
-        this.element = element || "";
-        this.modifier = modifier || 0;
-        this.color = color || "";
-      },
-      objectify: function () {
+      this.top = top || null;
+      this.left = left || null;
+      this.right = right || null;
+      this.bottom = bottom || null;
+      this.element = element || "";
+      this.modifier = modifier || 0;
+      this.color = color || "";
+    },
+    clone: function () {
+      return new CardRep(this.top, this.left, this.right, this.bottom, this.element, this.modifier, this.color);
+    },
+    objectify: function () {
+      return {
+        top: this.top,
+        left: this.left,
+        right: this.right,
+        bottom: this.bottom,
+        element: this.element,
+        modifier: this.modifier,
+        color: this.color
+      };
+    },
+    adjacencyDictToObjects: function(adjacencyDict) {
+      return Object.keys(adjacencyDict).map(function(position) {
         return {
-          top: this.top,
-          left: this.left,
-          right: this.right,
-          bottom: this.bottom,
-          element: this.element,
-          modifier: this.modifier,
-          color: this.color
+          position: position,
+          card:adjacencyDict[position]
         };
-      },
-      adjacencyDictToObjects: function(adjacencyDict) {
-        return Object.keys(adjacencyDict).map(function(position) {
-          return {
-            position: position,
-            card:adjacencyDict[position]
-          };
-        });
-      },
-      compareMatchingValue: function(adjacency,comparisonFunction) {
-        switch(adjacency.position) {
-          case "top":
-            return comparisonFunction(this.top,adjacency.card.bottom,adjacency);
-          case "right":       
-            return comparisonFunction(this.right,adjacency.card.left,adjacency);
-          case "left":
-            return comparisonFunction(this.left,adjacency.card.right,adjacency);
-          case "bottom":
-            return comparisonFunction(this.bottom,adjacency.card.top,adjacency);
-        }
-      },
-      applyRules: function(rules, adjacentCards) {
-        adjacentCards = this.adjacencyDictToObjects(adjacentCards);
-
-        // For each rule, gather the list of cards it would flip
-        flips = rules.map(function (rule) {
-          if (rule in this.rules) {
-            return this.rules[rule](adjacentCards,this);
-          }
-        },this).reduce(function (a,b) {
-          return a.concat(b);
-        }).filter(function(adjacency) {
-          return adjacency.card.color !== this.color;
-        },this).map(function(adjacency) {
-          return adjacency.position;
-        });
-
-        return flips;
-      },
-      rules: {
-        rank: function (adjacentCards,thisCard) {
-          return adjacentCards.filter(function (adjacency) {
-            card = adjacency.card;
-
-            return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue) {
-              return thisCardValue > adjacentCardValue;
-            });
-          },this);
-        },
-        same: function (adjacentCards,thisCard) {
-          cardsWithSameValue = adjacentCards.filter(function (adjacency) {
-            return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue) {
-              return thisCardValue === adjacentCardValue;
-            });
-          });
-
-          if (cardsWithSameValue.length < 2) {
-            return []
-          }
-
-          return cardsWithSameValue;
-        },
-        plus: function (adjacentCards,thisCard) {
-          var summedValues = adjacentCards.map(function (adjacency) {
-            return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue,adjacency) {
-                return {sum: thisCardValue + adjacentCardValue, adjacency: adjacency};
-            });
-          }).sort(function(a,b) {
-            return a.sum - b.sum
-          });
-
-          adjacencies = summedValues.reduce(function(groupedSumsArray,currentValue) {
-            if (groupedSumsArray.length > 0 && groupedSumsArray[groupedSumsArray.length - 1].sum == currentValue.sum) {
-              groupedSumsArray[groupedSumsArray.length - 1].adjacencies.push(currentValue.adjacency);
-            }
-            else {
-              groupedSumsArray.push({sum: currentValue.sum, adjacencies: [currentValue.adjacency]});
-            }
-            return groupedSumsArray;
-          },[]).filter(function (adjacencyGroup) {
-            return adjacencyGroup.adjacencies.length > 1;
-          }).map(function(adjacencyGroup) {
-            return adjacencyGroup.adjacencies;
-          }).reduce(function (a,b) {
-            return a.concat(b);
-          });
-
-          return adjacencies;
-        }
+      });
+    },
+    compareMatchingValue: function(adjacency,comparisonFunction) {
+      switch(adjacency.position) {
+        case "top":
+          return comparisonFunction(this.top,adjacency.card.bottom,adjacency);
+        case "right":       
+          return comparisonFunction(this.right,adjacency.card.left,adjacency);
+        case "left":
+          return comparisonFunction(this.left,adjacency.card.right,adjacency);
+        case "bottom":
+          return comparisonFunction(this.bottom,adjacency.card.top,adjacency);
       }
+    },
+    applyRules: function(rules, adjacentCards) {
+      adjacentCards = this.adjacencyDictToObjects(adjacentCards);
 
-  })
+      // For each rule, gather the list of cards it would flip
+      flips = rules.map(function (rule) {
+        if (rule in this.rules) {
+          return this.rules[rule](adjacentCards,this);
+        }
+      },this).reduce(function (a,b) {
+        return a.concat(b);
+      }).filter(function(adjacency) {
+        return adjacency.card.color !== this.color;
+      },this).map(function(adjacency) {
+        return adjacency.position;
+      });
+
+      return flips;
+    },
+    rules: {
+      rank: function (adjacentCards,thisCard) {
+        return adjacentCards.filter(function (adjacency) {
+          card = adjacency.card;
+
+          return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue) {
+            return thisCardValue > adjacentCardValue;
+          });
+        },this);
+      },
+      same: function (adjacentCards,thisCard) {
+        cardsWithSameValue = adjacentCards.filter(function (adjacency) {
+          return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue) {
+            return thisCardValue === adjacentCardValue;
+          });
+        });
+
+        if (cardsWithSameValue.length < 2) {
+          return []
+        }
+
+        return cardsWithSameValue;
+      },
+      plus: function (adjacentCards,thisCard) {
+        var summedValues = adjacentCards.map(function (adjacency) {
+          return thisCard.compareMatchingValue(adjacency, function(thisCardValue,adjacentCardValue,adjacency) {
+              return {sum: thisCardValue + adjacentCardValue, adjacency: adjacency};
+          });
+        }).sort(function(a,b) {
+          return a.sum - b.sum
+        });
+
+        adjacencies = summedValues.reduce(function(groupedSumsArray,currentValue) {
+          if (groupedSumsArray.length > 0 && groupedSumsArray[groupedSumsArray.length - 1].sum == currentValue.sum) {
+            groupedSumsArray[groupedSumsArray.length - 1].adjacencies.push(currentValue.adjacency);
+          }
+          else {
+            groupedSumsArray.push({sum: currentValue.sum, adjacencies: [currentValue.adjacency]});
+          }
+          return groupedSumsArray;
+        },[]).filter(function (adjacencyGroup) {
+          return adjacencyGroup.adjacencies.length > 1;
+        }).map(function(adjacencyGroup) {
+          return adjacencyGroup.adjacencies;
+        }).reduce(function (a,b) {
+          return a.concat(b);
+        });
+
+        return adjacencies;
+      }
+    }
+  });
 </script>

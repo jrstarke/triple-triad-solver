@@ -157,6 +157,16 @@
           var cardsToFlip = placingCard.applyRules(["plus"],adjacentCards);
           assert.sameMembers(cardsToFlip, expected, 'flipped cards');
         });
+        test('clone', function () {
+          var cardRep = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRepClone = cardRep.clone();
+
+          assert.deepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should be equivalent');
+
+          cardRep.top = 5;
+
+          assert.notDeepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should not be equivalent');
+        });
       });
     </script>
 
