@@ -89,6 +89,9 @@
         previous[current.position] = current.card;
         return previous;
       },{});
+    },
+    placeCard: function (card, row, column) {
+      this.cards[row][column] = card;
     }
 	});
 </script>

@@ -210,6 +210,53 @@
           var availableSpaces = boardRep.getAvailableSpaces();
           assert.sameDeepMembers(availableSpaces, expected, 'All spaces should be available');
         });
+        test('place card', function () {
+          var boardRep = new BoardRep();
+
+          expected = {
+            cards: [
+              new Array(3),
+              new Array(3),
+              new Array(3)
+            ]
+          }
+
+          assert.deepEqual(boardRep.objectify(), expected, 'The cards should have been empty');
+
+          var card1 = new CardRep(1,2,3,4,'f',-1,'red');
+
+          boardRep.placeCard(card1,0,0);
+
+          var cardObject1 = {
+            top: 1,
+            left: 2,
+            right: 3,
+            bottom: 4,
+            element: 'f',
+            modifier: -1,
+            color: 'red'
+          };
+          expected.cards[0][0] = cardObject1;
+
+          assert.deepEqual(boardRep.objectify(), expected, 'The top left card should be set');
+
+          var card2 = new CardRep(5,6,7,8,'l',1,'blue');
+
+          boardRep.placeCard(card2,2,2);
+
+          var cardObject2 = {
+            top: 5,
+            left: 6,
+            right: 7,
+            bottom: 8,
+            element: 'l',
+            modifier: 1,
+            color: 'blue'
+          };
+          expected.cards[2][2] = cardObject2;
+
+          assert.deepEqual(boardRep.objectify(), expected, 'The top left and bottom right cards should be set');
+        });
       });
     </script>
   </body>
