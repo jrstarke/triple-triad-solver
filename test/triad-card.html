@@ -115,9 +115,9 @@
           card.modifier = -1;
           card.color = "red";
 
-          var expected = new CardRep(1,2,3,4,"f",-1,"red");
+          var expected = new CardRep(1,2,3,4,"f",-1,"red").objectify();
 
-          var cardRep = card.rep();
+          var cardRep = card.rep().objectify();
 
           assert.deepEqual(expected, cardRep, "The card rep didn't process correctly");
         });
