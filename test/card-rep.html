@@ -157,6 +157,31 @@
           var cardsToFlip = placingCard.applyRules(["plus"],adjacentCards);
           assert.sameMembers(cardsToFlip, expected, 'flipped cards');
         });
+        test('color flip: no color', function () {
+          var card = new CardRep();
+
+          var expectedColor = card.color;
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should not change");
+        });
+        test('color flip: the color should change, and back', function () {
+          var card = new CardRep();
+          card.color = "red";
+
+          var expectedColor = "blue";
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should change to blue");
+
+          expectedColor = "red";
+
+          card.flip();
+
+          assert.equal(card.color, expectedColor, "The color should change to red");
+        });
         test('clone', function () {
           var cardRep = new CardRep(1,2,3,4,'f',-1,'red');
           var cardRepClone = cardRep.clone();

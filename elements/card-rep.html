@@ -35,6 +35,16 @@
         color: this.color
       };
     },
+    flip: function () {
+      colorFlipMap = {
+        red: "blue",
+        blue: "red"
+      }
+
+      if (this.color in colorFlipMap) {
+        this.color = colorFlipMap[this.color];
+      }
+    },
     adjacencyDictToObjects: function(adjacencyDict) {
       return Object.keys(adjacencyDict).map(function(position) {
         return {
