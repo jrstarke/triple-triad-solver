@@ -28,6 +28,16 @@
 
           assert.deepEqual(cardRep.objectify(), expected, 'The object representation should have matched');
         });
+        test('clone', function () {
+          var cardRep = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRepClone = cardRep.clone();
+
+          assert.deepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should be equivalent');
+
+          cardRep.top = 5;
+
+          assert.notDeepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should not be equivalent');
+        });
         test('rank rule surrounded by lower cards should flip them all', function() {
           var otherCards = new CardRep(4,4,4,4,"",0,"blue");
           var placingCard = new CardRep(5,5,5,5,"",0,"red");
@@ -181,16 +191,6 @@
           card.flip();
 
           assert.equal(card.color, expectedColor, "The color should change to red");
-        });
-        test('clone', function () {
-          var cardRep = new CardRep(1,2,3,4,'f',-1,'red');
-          var cardRepClone = cardRep.clone();
-
-          assert.deepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should be equivalent');
-
-          cardRep.top = 5;
-
-          assert.notDeepEqual(cardRep.objectify(), cardRepClone.objectify(), 'The object and clone should not be equivalent');
         });
       });
     </script>

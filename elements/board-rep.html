@@ -4,9 +4,10 @@
 	BoardRep = Polymer({
 		is: "board-rep",
     properties: {
-      cards: Array
+      cards: Array,
+      rules: []
     },
-    factoryImpl: function(cards) {
+    factoryImpl: function(cards,rules) {
       var size = 3;
 
       if (!cards) {
@@ -16,7 +17,21 @@
         }
       }
 
+      this.rules = rules || [];
+
       this.cards = cards;
+    },
+    clone: function () {
+      var clonedCards = this.cards.map(function (row) {
+        return row.map(function (card) {
+          if (card) {
+            return card.clone();
+          }
+        });
+      });
+      var clonedRules = this.rules.slice(0);
+
+      return new BoardRep(clonedCards,clonedRules);
     },
     objectify: function () {
       return {
@@ -26,7 +41,8 @@
               return card.objectify();
             }
           });
-        })
+        }),
+        rules: this.rules
       };
     },
     getCardCounts: function () {
@@ -92,6 +108,90 @@
     },
     placeCard: function (card, row, column) {
       this.cards[row][column] = card;
+    },
+    flipCard: function (row, column) {
+      var card = this.cards[row][column];
+
+      if (card) {
+        card.flip();
+      }
+    },
+    calculateFlips: function (row, column) {
+      var boardRep = this.clone();
+
+      var flipSets = [];
+      var card = boardRep.cards[row][column];
+
+      var currentCalculations = [];
+      if (card) {
+        currentCalculations.push({
+          row: row,
+          column: column
+        });
+      }
+
+      while (currentCalculations.length > 0) {
+        var flips = currentCalculations.map(function (calculation) {
+          var card = boardRep.cards[calculation.row][calculation.column];
+          return card.applyRules(boardRep.rules, boardRep.getAdjacentCards(calculation.row, calculation.column)).map(function (flipPosition) {
+            var rowOffset = 0;
+            var columnOffset = 0;
+
+            if (flipPosition == "top") {
+              rowOffset = -1;
+            }
+            else if (flipPosition == "left") {
+              columnOffset = -1;
+            }
+            else if (flipPosition == "right") {
+              columnOffset = 1;
+            }
+            else if (flipPosition == "bottom") {
+              rowOffset = 1;
+            }
+
+            return {
+              row: calculation.row + rowOffset,
+              column: calculation.column + columnOffset
+            };
+          });
+        }).reduce(function (previousSet, currentSet) {
+          currentSet.forEach(function (flipPosition) {
+            if (previousSet.indexOf(flipPosition) < 0) {
+              previousSet.push(flipPosition);
+            }
+          });
+          return previousSet;
+        },[]).sort(function (a,b) {
+          if (a.row < b.row) {
+            return -1;
+          }
+          else if (b.row < a.row) {
+            return 1;
+          } 
+          
+          if (a.column < b.column) {
+            return -1;
+          }
+          else if (b.column < a.column) {
+            return 1;
+          }
+        
+          return -1;
+        });
+
+        flips.forEach(function (flipPosition) {
+          boardRep.flipCard(flipPosition.row, flipPosition.column);
+        });
+
+        if (flips.length > 0) {
+          flipSets.push(flips);  
+        }          
+        
+        currentCalculations = flips;
+      }
+
+      return flipSets;
     }
 	});
 </script>

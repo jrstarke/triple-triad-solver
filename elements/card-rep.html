@@ -79,7 +79,12 @@
         return adjacency.card.color !== this.color;
       },this).map(function(adjacency) {
         return adjacency.position;
-      });
+      }).reduce(function(positions, position) {
+        if (positions.indexOf(position) < 0) {
+          positions.push(position);
+        }
+        return positions
+      },[]);
 
       return flips;
     },
@@ -129,7 +134,7 @@
           return adjacencyGroup.adjacencies;
         }).reduce(function (a,b) {
           return a.concat(b);
-        });
+        },[]);
 
         return adjacencies;
       }

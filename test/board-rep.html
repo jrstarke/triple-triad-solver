@@ -25,7 +25,8 @@
             [undefined,undefined,card3]
           ];
 
-          var boardRep = new BoardRep(cards);
+          var rules = ['same','plus','rank'];
+          var boardRep = new BoardRep(cards,rules);
 
           var cardObject1 = {
             top: 1,
@@ -60,10 +61,34 @@
               [cardObject1,undefined,undefined],
               [undefined,cardObject2,undefined],
               [undefined,undefined,cardObject3]
-            ]
+            ],
+            rules: ['same','plus','rank']
           };
 
           assert.deepEqual(expected,boardRep.objectify(),'The object representation of the board didn\'t match');
+        });
+        test('clone', function () {
+          var card1 = new CardRep(1,2,3,4,'f',-1,'red');
+          var card2 = new CardRep(2,4,6,8,'w',1,'blue');
+          var card3 = new CardRep(1,3,5,7,'l',0,'red');
+
+          var cards = [
+            [card1,undefined,undefined],
+            [undefined,card2,undefined],
+            [undefined,undefined,card3]
+          ];
+
+          var rules = ['same','plus','rank'];
+          var boardRep = new BoardRep(cards,rules);
+          var boardRepClone = boardRep.clone();
+
+          assert.deepEqual(boardRep.objectify(),boardRepClone.objectify(),"The board and clone didn't match");
+
+          boardRepClone.cards[2][2].top = 2
+          assert.notDeepEqual(boardRep.objectify(),boardRepClone.objectify(),"The board and clone were unexpectedly the same");
+
+          boardRepClone.cards[2][2] = undefined;
+          assert.notDeepEqual(boardRep.objectify(),boardRepClone.objectify(),"The board and clone were unexpectedly the same");    
         });
         test('board count 1 each', function () {
           topLeftCard = new CardRep(5,5,5,5,"",0,"blue");
@@ -218,7 +243,8 @@
               new Array(3),
               new Array(3),
               new Array(3)
-            ]
+            ],
+            rules: []
           }
 
           assert.deepEqual(boardRep.objectify(), expected, 'The cards should have been empty');
@@ -256,6 +282,133 @@
           expected.cards[2][2] = cardObject2;
 
           assert.deepEqual(boardRep.objectify(), expected, 'The top left and bottom right cards should be set');
+        });
+        test('flip card', function () {
+          var boardRep = new BoardRep();
+
+          var expected = {
+            cards: [
+              new Array(3),
+              new Array(3),
+              new Array(3)
+            ],
+            rules: []
+          };
+
+          assert.deepEqual(boardRep.objectify(), expected, 'No cards should be set');
+
+          boardRep.flipCard(0,0);
+          assert.deepEqual(boardRep.objectify(), expected, 'Still, no cards should be set');
+
+          var cardObject1 = {
+            top: 1,
+            left: 2,
+            right: 3,
+            bottom: 4,
+            element: 'f',
+            modifier: -1,
+            color: 'red'
+          };
+          expected.cards[0][0] = cardObject1;
+
+          var card1 = new CardRep(1,2,3,4,'f',-1,'red');
+          boardRep.placeCard(card1,0,0);
+          assert.deepEqual(boardRep.objectify(), expected, 'Card 1 should be set');
+
+          cardObject1.color = 'blue';
+          boardRep.flipCard(0,0);
+          assert.deepEqual(boardRep.objectify(), expected, 'Card 1 should change color');          
+        });
+        test('Calculate flips: Same flip', function () {
+          var topLeftCard = new CardRep(1,5,3,3,"",0,'red');
+          var topCenterCard = new CardRep(9,3,6,7,"",0,'blue');
+          var centerLeftCard = new CardRep(3,3,4,5,"",0,'red');
+
+          var cards = [
+            [topLeftCard,topCenterCard,null],
+            [centerLeftCard,null,null],
+            [null,null,null]
+          ];
+          
+          var rulesInPlay = ['same'];
+          var boardRep = new BoardRep(cards,rulesInPlay);
+
+          expected = [
+            [
+              {row: 0, column: 1}
+            ]
+          ];
+
+          var cardFlips = boardRep.calculateFlips(0,0);
+
+          assert.sameDeepMembers(expected, cardFlips, "The expected cards didn't flip");
+        });
+        test('Calculate flips: Plus flip', function () {
+          var topLeftCard = new CardRep(4,2,4,7,"",0,'red');
+          var topCenterCard = new CardRep(1,5,3,3,"",0,'red');
+          var centerLeftCard = new CardRep(2,1,1,6,"",0,'blue');
+
+          var cards = [
+            [topLeftCard,topCenterCard,null],
+            [centerLeftCard,null,null],
+            [null,null,null]
+          ];
+          
+          var rulesInPlay = ['plus'];
+          var boardRep = new BoardRep(cards,rulesInPlay);
+
+          expected = [
+            [
+              {row: 1, column: 0}
+            ]
+          ];
+
+          var cardFlips = boardRep.calculateFlips(0,0);
+
+          assert.sameDeepMembers(expected, cardFlips, "The expected cards didn't flip");
+        });
+        test('Calculate flips: multiple rules and flips', function() {
+          // Based on the example from http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Combo
+          topLeftCard = new CardRep(10,6,8,2,"",0,"blue");
+          topCenterCard = new CardRep(3,7,6,5,"",0,"blue");
+          topRightCard = new CardRep(3,3,4,5,"",0,"blue");
+          
+          centerLeftCard = new CardRep(9,3,6,7,"",0,"blue");
+          centerCenterCard = new CardRep(3,10,1,10,"",0,"blue");
+          centerRightCard = new CardRep(2,5,3,1,"",0,"blue");
+          
+          bottomLeftCard = new CardRep(1,7,6,4,"",0,"red");
+          bottomCenterCard = new CardRep(9,2,10,4,"",0,"blue");
+          bottomRightCard = new CardRep(1,5,3,3,"",0,"blue");
+          cards = [
+            [topLeftCard,topCenterCard,topRightCard],
+            [centerLeftCard,centerCenterCard,centerRightCard],
+            [bottomLeftCard,bottomCenterCard,bottomRightCard]
+          ]
+          rulesInPlay = ["rank","same","plus"];
+          boardRep = new BoardRep(cards,rulesInPlay);
+          expected = [
+            [
+              {row: 1, column: 0},
+              {row: 2, column: 1}
+            ],
+            [
+              {row: 0, column: 0},
+              {row: 2, column: 2}
+            ],
+            [
+              {row: 0, column: 1}
+            ],
+            [
+              {row: 0, column: 2},
+              {row: 1, column: 1}
+            ],
+            [
+              {row: 1, column: 2}
+            ]
+          ];
+          cardFlip = boardRep.calculateFlips(2,0);
+          assert.sameDeepMembers(expected, cardFlip, "the expected cards didn't flipped");
         });
       });
     </script>
