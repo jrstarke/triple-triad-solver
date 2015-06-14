@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<script>
+  HandRep = Polymer({
+    is: 'hand-rep',
+    properties: {
+      cards: Array,
+      color: String
+    },
+    factoryImpl: function(cards, color) {
+      this.cards = cards || [];
+      this.color = color || "";
+    },
+    clone: function () {
+      return new HandRep(this.cards.map(function(card) {
+        return card.clone();
+      }), this.color);
+    },
+    objectify: function () {
+      return {
+        cards: this.cards.map(function (card) {
+          return card.objectify();
+        }),
+        color: this.color
+      };
+    }
+  });
+</script>

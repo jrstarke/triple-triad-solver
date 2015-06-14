@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/hand-rep.html">
+  </head>
+  <body>
+    <script>
+      suite('hand-rep', function() {
+        test('objectify card representation', function () {
+          var cardRep1 = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRep2 = new CardRep(2,4,6,8,'l',0,'red');
+          var cardRep3 = new CardRep(1,3,5,7,'w',1,'red');
+
+          var cards = [cardRep1,cardRep2,cardRep3];
+          var expectedColor = 'red';
+
+          var handRep = new HandRep(cards,expectedColor);
+
+          var cardObject1 = {
+            top: 1,
+            left: 2,
+            right: 3,
+            bottom: 4,
+            element: 'f',
+            modifier: -1,
+            color: 'red'
+          };
+          var cardObject2 = {
+            top: 2,
+            left: 4,
+            right: 6,
+            bottom: 8,
+            element: 'l',
+            modifier: 0,
+            color: 'red'
+          };
+          var cardObject3 = {
+            top: 1,
+            left: 3,
+            right: 5,
+            bottom: 7,
+            element: 'w',
+            modifier: 1,
+            color: 'red'
+          };
+          var handObject = {
+            cards: [
+              cardObject1,
+              cardObject2,
+              cardObject3
+            ],
+            color: expectedColor
+          }
+
+          assert.deepEqual(handObject, handRep.objectify(), 'The object representation should have matched');
+        });
+        test('clone', function () {
+          var cardRep1 = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRep2 = new CardRep(2,4,6,8,'l',0,'red');
+          var cardRep3 = new CardRep(1,3,5,7,'w',1,'red');
+          var cards = [cardRep1,cardRep2,cardRep3];
+          var expectedColor = 'red';
+          var handRep = new HandRep(cards,expectedColor);
+
+          var handRepClone = handRep.clone();
+
+          assert.deepEqual(handRep.objectify(), handRepClone.objectify(), 'The object and clone should be equivalent');
+
+          handRepClone.cards[2].top = 9;
+
+          assert.notDeepEqual(handRep.objectify(), handRepClone.objectify(), 'The object and clone should not be equivalent');
+
+          handRepClone.cards.pop(2);
+
+          assert.notDeepEqual(handRep.objectify(), handRepClone.objectify(), 'The object and clone should not be equivalent');
+
+          handRep.cards.pop(2);
+
+          assert.deepEqual(handRep.objectify(), handRepClone.objectify(), 'The object and clone should be equivalent');
+        });
+      });
+    </script>
+
+  </body>
+</html>
