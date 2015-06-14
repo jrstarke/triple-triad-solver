@@ -23,6 +23,14 @@
         }),
         color: this.color
       };
+    },
+    availableCards: function () {
+      return this.cards.map(function (card, index) {
+        return {
+          card: card,
+          position: index
+        }
+      });
     }
   });
 </script>
