@@ -113,6 +113,20 @@
 
           assert.sameDeepMembers(availableCards, expected, 'The available cards did not match the expected');
         });
+        test('play card', function () {
+          var cardRep1 = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRep2 = new CardRep(2,4,6,8,'l',0,'red');
+          var cardRep3 = new CardRep(1,3,5,7,'w',1,'red');
+          var cards = [cardRep1,cardRep2,cardRep3];
+          var expectedColor = 'red';
+          var handRep = new HandRep(cards,expectedColor);
+
+          var card = handRep.playCard(1);
+          var expectedCards = [cardRep1,cardRep3];
+
+          assert.equal(card, cardRep2, 'The returned card should be the second card');
+          assert.sameDeepMembers(handRep.cards, expectedCards);
+        });
       });
     </script>
 
