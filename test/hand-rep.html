@@ -127,6 +127,23 @@
           assert.equal(card, cardRep2, 'The returned card should be the second card');
           assert.sameDeepMembers(handRep.cards, expectedCards);
         });
+        test('hand count', function () {
+          var cardRep1 = new CardRep(1,2,3,4,'f',-1,'red');
+          var cardRep2 = new CardRep(2,4,6,8,'l',0,'red');
+          var cards = [cardRep1,cardRep2];
+          var handRep = new HandRep(cards,"red");
+
+          var expectedCounts = {
+            "red": 2
+          }
+
+          assert.deepEqual(handRep.getCardCounts(), expectedCounts, 'The red count should have been 2');
+          
+          handRep.playCard(0);
+          expectedCounts['red'] = 1;
+
+          assert.deepEqual(handRep.getCardCounts(), expectedCounts, 'The red count should have been 1');
+        });
       });
     </script>
 

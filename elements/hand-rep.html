@@ -34,6 +34,17 @@
     },
     playCard: function (index) {
       return this.cards.splice(index,1)[0];
-    }
+    },
+    getCardCounts: function () {
+      return this.cards.map(function (card) {
+        return {
+          color: card.color,
+          sum: 1
+        };
+      }).reduce(function (previous,current) {
+        previous[current.color] = (previous[current.color] || 0) + current.sum
+        return previous;
+      },{});
+    },
   });
 </script>
