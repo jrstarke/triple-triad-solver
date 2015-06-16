@@ -320,6 +320,7 @@
           assert.deepEqual(boardRep.objectify(), expected, 'Card 1 should change color');          
         });
         test('Calculate flips: Same flip', function () {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
           var topLeftCard = new CardRep(1,5,3,3,"",0,'red');
           var topCenterCard = new CardRep(9,3,6,7,"",0,'blue');
           var centerLeftCard = new CardRep(3,3,4,5,"",0,'red');
@@ -344,6 +345,7 @@
           assert.sameDeepMembers(expected, cardFlips, "The expected cards didn't flip");
         });
         test('Calculate flips: Plus flip', function () {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Plus
           var topLeftCard = new CardRep(4,2,4,7,"",0,'red');
           var topCenterCard = new CardRep(1,5,3,3,"",0,'red');
           var centerLeftCard = new CardRep(2,1,1,6,"",0,'blue');

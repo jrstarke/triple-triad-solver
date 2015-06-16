@@ -78,6 +78,9 @@
 <script>
   	Polymer({
   		is: "triad-board",
+      properties: {
+        rules: Array
+      },
   		allowDrop: function (e) {
   			e.preventDefault();
   		},
@@ -98,6 +101,32 @@
         cell.innerHTML = "";
 
         cell.appendChild(card);
+
+        var boardRep = this.rep();
+
+        var cards = this.cards2D();
+
+        var flips = boardRep.runPlacement(row,column);
+        
+        flips.reduce(function (a, b) {
+          return a.concat(b);
+        },[]).forEach(function (flipPosition) {
+          var card = cards[flipPosition.row][flipPosition.column];
+          card.flip();
+        });
+        return flips;
+      },
+      cards2D: function () {
+        cards = [
+          Array(3),
+          Array(3),
+          Array(3)
+        ]
+
+        return this.getCards().reduce(function (cardDict, cardPosition) {
+          cardDict[cardPosition.row][cardPosition.column] = cardPosition.card;
+          return cardDict;
+        },cards);
       },
       getCards: function () {
         var cards = [];
@@ -140,7 +169,7 @@
           return cardBoard;
         },cards);
 
-  			var boardRep = new BoardRep(cards);
+  			var boardRep = new BoardRep(cards,this.rules);
   			return boardRep;
   		}
   	});

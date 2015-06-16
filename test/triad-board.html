@@ -18,12 +18,20 @@
     <div id="origin"></div>
     <div id="container"></div>
 
-    <div id="test-place-card" style="display: none;">
-      <triad-board id="test-place-card-board"></triad-board>
+    <div class="test-place-card-diagonal" style="display: none;">
+      <triad-board id="test-place-card-diagonal-board"></triad-board>
 
-      <triad-card id="test-place-card-1" top="1" left="2" right="3" bottom="4" element="f" color="red"></triad-card>
-      <triad-card id="test-place-card-2" top="2" left="4" right="6" bottom="8" element="w" color="red"></triad-card>
-      <triad-card id="test-place-card-3" top="1" left="3" right="5" bottom="7" element="l" color="red"></triad-card>
+      <triad-card id="test-place-card-diagonal-card-1" top="1" left="2" right="3" bottom="4" element="f" color="red"></triad-card>
+      <triad-card id="test-place-card-diagonal-card-2" top="2" left="4" right="6" bottom="8" element="w" color="red"></triad-card>
+      <triad-card id="test-place-card-diagonal-card-3" top="1" left="3" right="5" bottom="7" element="l" color="red"></triad-card>
+    </div>
+
+    <div id="test-place-card-flip-same" style="display: none;">
+      <triad-board id="test-place-card-flip-same-board"></triad-board>
+
+      <triad-card id="test-place-card-flip-same-card-1" top="3" left="3" right="4" bottom="5" color="red"></triad-card>
+      <triad-card id="test-place-card-flip-same-card-2" top="9" left="3" right="6" bottom="7" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-card-3" top="1" left="5" right="3" bottom="3" color="red"></triad-card>
     </div>
 
     <script>
@@ -98,6 +106,41 @@
 
           assert.sameDeepMembers(cards, expected, "The cards should be right down the diagonal");
         });
+        test('card 2D', function () {
+          var board = getBoardElement();
+
+          var cells = board.getElementsByClassName('triad-board cell');
+          function placeCard (card, row, column) {
+            var position = (row * 3) + column;
+
+            var cell = cells[position];
+            var dropzone = cell.getElementsByClassName('dropzone')[0];
+
+            cell.replaceChild(card,dropzone);
+          }
+
+          var card1 = getCardElement();
+          var card2 = getCardElement();
+          var card3 = getCardElement();
+
+          placeCard(card1,0,0);
+          placeCard(card2,1,1);
+          placeCard(card3,2,2);
+          
+
+          var expected = [
+            Array(3),
+            Array(3),
+            Array(3)
+          ];
+          expected[0][0] = card1;
+          expected[1][1] = card2;
+          expected[2][2] = card3;
+
+          var cards = board.cards2D();
+
+          assert.sameDeepMembers(cards, expected, "The cards should be right down the diagonal");
+        });
         test('rep', function () {
           var board = getBoardElement();
 
@@ -134,12 +177,12 @@
 
           assert.deepEqual(boardRep, expected, "The board rep should be consistent");
         });
-        test('place card', function () {
-          var board = document.getElementById('test-place-card-board');
+        test('place card diagonal', function () {
+          var board = document.getElementById('test-place-card-diagonal-board');
 
-          var card1 = document.getElementById('test-place-card-1');
-          var card2 = document.getElementById('test-place-card-2');
-          var card3 = document.getElementById('test-place-card-3');
+          var card1 = document.getElementById('test-place-card-diagonal-card-1');
+          var card2 = document.getElementById('test-place-card-diagonal-card-2');
+          var card3 = document.getElementById('test-place-card-diagonal-card-3');
 
           board.placeCard(card1,0,0);
 
@@ -167,6 +210,27 @@
           ]
 
           assert.sameDeepMembers(board.getCards(),expected,'The card3 was not placed correctly');       
+        });
+        test('place card flip same', function () {
+          var board = document.getElementById('test-place-card-flip-same-board');
+          board.rules = ['same'];
+
+          var card1 = document.getElementById('test-place-card-flip-same-card-1');
+          var card2 = document.getElementById('test-place-card-flip-same-card-2');
+          var card3 = document.getElementById('test-place-card-flip-same-card-3');
+
+          board.placeCard(card1,1,0);
+          board.placeCard(card2,0,1);
+          var flips = board.placeCard(card3,0,0);
+
+          var expectedFlips = [
+            [
+              {row: 0, column: 1}
+            ]
+          ];
+
+          assert.sameDeepMembers(flips,expectedFlips,'The blue card should have flipped');
+          assert.equal(card2.color,"red",'The blue card should have flipped to red');
         });
       });
     </script>
