@@ -18,6 +18,14 @@
     <div id="origin"></div>
     <div id="container"></div>
 
+    <div id="test-place-card" style="display: none;">
+      <triad-board id="test-place-card-board"></triad-board>
+
+      <triad-card id="test-place-card-1" top="1" left="2" right="3" bottom="4" element="f" color="red"></triad-card>
+      <triad-card id="test-place-card-2" top="2" left="4" right="6" bottom="8" element="w" color="red"></triad-card>
+      <triad-card id="test-place-card-3" top="1" left="3" right="5" bottom="7" element="l" color="red"></triad-card>
+    </div>
+
     <script>
       var origin = document.querySelector('#origin');
       var container = document.querySelector('#container');
@@ -125,6 +133,40 @@
           var boardRep = board.rep().objectify();
 
           assert.deepEqual(boardRep, expected, "The board rep should be consistent");
+        });
+        test('place card', function () {
+          var board = document.getElementById('test-place-card-board');
+
+          var card1 = document.getElementById('test-place-card-1');
+          var card2 = document.getElementById('test-place-card-2');
+          var card3 = document.getElementById('test-place-card-3');
+
+          board.placeCard(card1,0,0);
+
+          var expected = [
+            {row: 0, column: 0, card: card1}
+          ];
+
+          assert.sameDeepMembers(board.getCards(),expected,'The card1 was not placed correctly');
+
+          board.placeCard(card2,1,1);
+
+          expected = [
+            {row: 0, column: 0, card: card1},
+            {row: 1, column: 1, card: card2}
+          ]
+
+          assert.sameDeepMembers(board.getCards(),expected,'The card2 was not placed correctly');
+
+          board.placeCard(card3,2,2);
+
+          expected = [
+            {row: 0, column: 0, card: card1},
+            {row: 1, column: 1, card: card2},
+            {row: 2, column: 2, card: card3}
+          ]
+
+          assert.sameDeepMembers(board.getCards(),expected,'The card3 was not placed correctly');       
         });
       });
     </script>

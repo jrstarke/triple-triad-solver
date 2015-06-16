@@ -91,6 +91,14 @@
   			cell.insertBefore(draggedElement, dropElement);
   			cell.removeChild(dropElement);
   		},
+      placeCard: function (card, row, column) {
+        var cells = this.getElementsByClassName('triad-board cell');
+        
+        var cell = cells[(row * 3) + column];
+        cell.innerHTML = "";
+
+        cell.appendChild(card);
+      },
       getCards: function () {
         var cards = [];
 
