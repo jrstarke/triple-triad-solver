@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/triad-hand.html">
+    <link rel="import" href="../elements/triad-card.html">
+    <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/hand-rep.html">
+  </head>
+  <body>
+
+    <div id="container"></div>
+
+    <div class="test-cards" style="display:none;">
+      <triad-hand id="test-cards-hand"></triad-hand>
+
+      <triad-card id="test-cards-card-1"></triad-card>
+      <triad-card id="test-cards-card-2"></triad-card>
+      <triad-card id="test-cards-card-3"></triad-card>
+    </div>
+
+    <div class="test-rep" style="display:none;">
+      <triad-hand id="test-rep-hand"></triad-hand>
+
+      <triad-card id="test-rep-card-1"></triad-card>
+      <triad-card id="test-rep-card-2"></triad-card>
+      <triad-card id="test-rep-card-3"></triad-card>
+    </div>
+
+    <script>
+      var container = document.querySelector('#container');
+
+      function getHandElement() {
+        var hand = document.createElement('triad-hand');
+        container.appendChild(hand);
+
+        return hand;
+      }
+
+      function getCardElement() {
+        var card = document.createElement('triad-card');
+        container.appendChild(card);
+
+        return card;
+      }
+
+      suite('<triad-hand>', function() {
+        test('cards', function () {
+          var hand = document.getElementById('test-cards-hand');
+
+          var card1 = document.getElementById('test-cards-card-1');
+          var card2 = document.getElementById('test-cards-card-2');
+          var card3 = document.getElementById('test-cards-card-3');
+          
+          var handDiv = hand.$$('.hand');
+          handDiv.innerHTML = "";
+          handDiv.appendChild(card1);
+          handDiv.appendChild(card2);
+          handDiv.appendChild(card3);
+          
+          var expected = [
+            {position: 0, card: card1},
+            {position: 1, card: card2},
+            {position: 2, card: card3}
+          ];
+
+          var cards = hand.getCards();
+
+          assert.sameDeepMembers(cards, expected, "There should be 3 cards");
+        });
+        test('rep', function () {
+          var hand = document.getElementById('test-rep-hand');
+          hand.color = "red";
+
+          var card1 = document.getElementById('test-rep-card-1');
+          var card2 = document.getElementById('test-rep-card-2');
+          var card3 = document.getElementById('test-rep-card-3');
+
+          var handDiv = hand.$$('.hand');
+          handDiv.innerHTML = "";
+          handDiv.appendChild(card1);
+          handDiv.appendChild(card2);
+          handDiv.appendChild(card3);
+          
+          var cards = [
+            new CardRep(),
+            new CardRep(),
+            new CardRep()
+          ];
+
+          var expected = new HandRep(cards,"red").objectify();
+
+          var handRepObject = hand.rep().objectify();
+
+          assert.deepEqual(handRepObject, expected, "The hand rep should be consistent");
+        });
+      });
+    </script>
+  </body>
+</html>

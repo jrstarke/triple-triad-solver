@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="triad-card.html" />
+<link rel="import" href="board-rep.html" />
 
 <dom-module id="triad-hand">
   <style>
@@ -25,6 +26,7 @@
   Polymer({
     is: "triad-hand",
     properties: {
+      card: Array,
       color: String
     },
     repeatitions: function (num) {
@@ -35,6 +37,28 @@
     },
     handleDrag: function(e) {
       window.triad_solver.dragged_element = e.srcElement;
-    }
+    },
+    getCards: function () {
+      var cards = [];
+
+      var cardElems = this.getElementsByTagName("triad-card")
+      for (var cardIndex = 0; cardIndex < cardElems.length; cardIndex++) {
+        var card = cardElems[cardIndex];
+
+        cards.push({
+          position: cardIndex,
+          card: card
+        });
+      }
+      
+      return cards;
+    },
+    rep: function () {
+        cards = this.getCards().map(function (cardPosition) {
+          return cardPosition.card.rep();
+        });
+
+        return new HandRep(cards,this.color);
+      }
   })
 </script>
