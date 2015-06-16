@@ -101,13 +101,14 @@
         });
       }).reduce(function (a,b) {
         return a.concat(b);
-      }).reduce(function (previous,current) {
+      },[]).reduce(function (previous,current) {
         previous[current.position] = current.card;
         return previous;
       },{});
     },
     placeCard: function (card, row, column) {
       this.cards[row][column] = card;
+      return this.runPlacement(row, column);
     },
     flipCard: function (row, column) {
       var card = this.cards[row][column];
@@ -116,8 +117,8 @@
         card.flip();
       }
     },
-    calculateFlips: function (row, column) {
-      var boardRep = this.clone();
+    runPlacement: function (row, column) {
+      var boardRep = this;
 
       var flipSets = [];
       var card = boardRep.cards[row][column];

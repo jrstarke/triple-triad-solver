@@ -339,7 +339,7 @@
             ]
           ];
 
-          var cardFlips = boardRep.calculateFlips(0,0);
+          var cardFlips = boardRep.runPlacement(0,0);
 
           assert.sameDeepMembers(expected, cardFlips, "The expected cards didn't flip");
         });
@@ -363,7 +363,7 @@
             ]
           ];
 
-          var cardFlips = boardRep.calculateFlips(0,0);
+          var cardFlips = boardRep.runPlacement(0,0);
 
           assert.sameDeepMembers(expected, cardFlips, "The expected cards didn't flip");
         });
@@ -407,7 +407,7 @@
               {row: 1, column: 2}
             ]
           ];
-          cardFlip = boardRep.calculateFlips(2,0);
+          cardFlip = boardRep.runPlacement(2,0);
           assert.sameDeepMembers(expected, cardFlip, "the expected cards didn't flipped");
         });
       });
