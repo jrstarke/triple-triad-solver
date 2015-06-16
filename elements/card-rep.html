@@ -75,7 +75,7 @@
         }
       },this).reduce(function (a,b) {
         return a.concat(b);
-      }).filter(function(adjacency) {
+      },[]).filter(function(adjacency) {
         return adjacency.card.color !== this.color;
       },this).map(function(adjacency) {
         return adjacency.position;
