@@ -42,6 +42,23 @@
       <triad-card id="test-place-card-flip-plus-card-3" top="4" left="2" right="4" bottom="7" color="red"></triad-card>
     </div>
 
+    <div id="test-place-card-flip-same-plus" style="display: none;">
+      <triad-board id="test-place-card-flip-same-plus-board"></triad-board>
+
+      <triad-card id="test-place-card-flip-same-plus-card-1" top="10" left="6" right="8" bottom="2" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-plus-card-2" top="3" left="7" right="6" bottom="5" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-plus-card-3" top="3" left="3" right="4" bottom="5" color="blue"></triad-card>
+
+      <triad-card id="test-place-card-flip-same-plus-card-4" top="9" left="3" right="6" bottom="7" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-plus-card-5" top="3" left="10" right="1" bottom="10" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-plus-card-6" top="2" left="5" right="3" bottom="1" color="blue"></triad-card>
+
+      <triad-card id="test-place-card-flip-same-plus-card-7" top="9" left="2" right="10" bottom="4" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-same-plus-card-8" top="1" left="5" right="3" bottom="3" color="blue"></triad-card>
+
+      <triad-card id="test-place-card-flip-same-plus-card-9" top="1" left="7" right="6" bottom="4" color="red"></triad-card>      
+    </div>
+
     <script>
       var origin = document.querySelector('#origin');
       var container = document.querySelector('#container');
@@ -239,7 +256,10 @@
           ];
 
           assert.sameDeepMembers(flips,expectedFlips,'The blue card should have flipped');
-          assert.equal(card2.color,"red",'The blue card should have flipped to red');
+
+          assert.equal(card2.color,"red",'Card 2 should have flipped red');
+          assert.equal(card1.color,"red",'Card 1 should still be red');
+          assert.equal(card3.color,"red",'Card 3 should still be red');
         });
         test('place card flip plus', function () {
           // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
@@ -261,7 +281,73 @@
           ];
 
           assert.sameDeepMembers(flips,expectedFlips,'The blue card should have flipped');
-          assert.equal(card2.color,"red",'The blue card should have flipped to red');
+
+          assert.equal(card2.color,"red",'Card 2 should have flipped red');
+          assert.equal(card1.color,"red",'Card 1 should still be red');
+          assert.equal(card3.color,"red",'Card 3 should still be red');
+        });
+        test('place card flip same plus', function () {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
+          var board = document.getElementById('test-place-card-flip-same-plus-board');
+          board.rules = ['plus','same','rank'];
+
+          var card1 = document.getElementById('test-place-card-flip-same-plus-card-1');
+          var card2 = document.getElementById('test-place-card-flip-same-plus-card-2');
+          var card3 = document.getElementById('test-place-card-flip-same-plus-card-3');
+
+          var card4 = document.getElementById('test-place-card-flip-same-plus-card-4');
+          var card5 = document.getElementById('test-place-card-flip-same-plus-card-5');
+          var card6 = document.getElementById('test-place-card-flip-same-plus-card-6');
+
+          var card7 = document.getElementById('test-place-card-flip-same-plus-card-7');
+          var card8 = document.getElementById('test-place-card-flip-same-plus-card-8');
+
+          var card9 = document.getElementById('test-place-card-flip-same-plus-card-9');
+
+          board.placeCard(card1,0,0);
+          board.placeCard(card2,0,1);
+          board.placeCard(card3,0,2);
+
+          board.placeCard(card4,1,0);
+          board.placeCard(card5,1,1);
+          board.placeCard(card6,1,2);
+
+          board.placeCard(card7,2,1);
+          board.placeCard(card8,2,2);
+          var flips = board.placeCard(card9,2,0);
+
+          var expectedFlips = [
+            [
+              {row: 1, column: 0},
+              {row: 2, column: 1}
+            ],
+            [
+              {row: 0, column: 0},
+              {row: 2, column: 2}
+            ],
+            [
+              {row: 0, column: 1}
+            ],
+            [
+              {row: 0, column: 2},
+              {row: 1, column: 1}
+            ],
+            [
+              {row: 1, column: 2}
+            ]
+          ];
+
+          assert.sameDeepMembers(flips,expectedFlips,'All of the blue cards should have flipped to red');
+
+          assert.equal(card1.color,"red",'Card 1 should have flipped red');
+          assert.equal(card2.color,"red",'Card 2 should have flipped red');
+          assert.equal(card3.color,"red",'Card 3 should have flipped red');
+          assert.equal(card4.color,"red",'Card 4 should have flipped red');
+          assert.equal(card5.color,"red",'Card 5 should have flipped red');
+          assert.equal(card6.color,"red",'Card 6 should have flipped red');
+          assert.equal(card7.color,"red",'Card 7 should have flipped red');
+          assert.equal(card8.color,"red",'Card 8 should have flipped red');
+          assert.equal(card9.color,"red",'Card 9 should still be red');
         });
       });
     </script>
