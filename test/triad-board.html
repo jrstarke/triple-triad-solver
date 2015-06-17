@@ -34,6 +34,14 @@
       <triad-card id="test-place-card-flip-same-card-3" top="1" left="5" right="3" bottom="3" color="red"></triad-card>
     </div>
 
+    <div id="test-place-card-flip-plus" style="display: none;">
+      <triad-board id="test-place-card-flip-plus-board"></triad-board>
+
+      <triad-card id="test-place-card-flip-plus-card-1" top="1" left="5" right="3" bottom="3" color="red"></triad-card>
+      <triad-card id="test-place-card-flip-plus-card-2" top="2" left="1" right="1" bottom="6" color="blue"></triad-card>
+      <triad-card id="test-place-card-flip-plus-card-3" top="4" left="2" right="4" bottom="7" color="red"></triad-card>
+    </div>
+
     <script>
       var origin = document.querySelector('#origin');
       var container = document.querySelector('#container');
@@ -212,6 +220,7 @@
           assert.sameDeepMembers(board.getCards(),expected,'The card3 was not placed correctly');       
         });
         test('place card flip same', function () {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
           var board = document.getElementById('test-place-card-flip-same-board');
           board.rules = ['same'];
 
@@ -226,6 +235,28 @@
           var expectedFlips = [
             [
               {row: 0, column: 1}
+            ]
+          ];
+
+          assert.sameDeepMembers(flips,expectedFlips,'The blue card should have flipped');
+          assert.equal(card2.color,"red",'The blue card should have flipped to red');
+        });
+        test('place card flip plus', function () {
+          // Based on http://tripletriad.wikia.com/wiki/Triple_Triad:Triple_Triad_101#Same
+          var board = document.getElementById('test-place-card-flip-plus-board');
+          board.rules = ['plus'];
+
+          var card1 = document.getElementById('test-place-card-flip-plus-card-1');
+          var card2 = document.getElementById('test-place-card-flip-plus-card-2');
+          var card3 = document.getElementById('test-place-card-flip-plus-card-3');
+
+          board.placeCard(card1,0,1);
+          board.placeCard(card2,1,0);
+          var flips = board.placeCard(card3,0,0);
+
+          var expectedFlips = [
+            [
+              {row: 1, column: 0}
             ]
           ];
 
