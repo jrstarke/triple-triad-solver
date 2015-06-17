@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/hand-rep.html">
+    <link rel="import" href="../elements/board-rep.html">
+    <link rel="import" href="../elements/solver-rep.html">
+  </head>
+  <body>
+    <script>
+      suite('solver-rep', function() {
+        test('objectify solver representation', function () {
+          var redCardRep = new CardRep(2,4,6,8,'l',0,'red');
+          var blueCardRep = new CardRep(1,2,3,4,'f',-1,'blue');
+
+          var middleBoardCardRep = new CardRep(1,3,5,7,'w',1,'red');
+
+          var redHandRep = new HandRep([redCardRep],"red");
+          var blueHandRep = new HandRep([blueCardRep],"blue");
+
+          var boardCards = [
+            Array(),
+            Array(),
+            Array()
+          ]
+          boardCards[1][1] = middleBoardCardRep;
+
+          var boardRep = new BoardRep(boardCards,['same','plus','rank']);
+
+          var solverRep = new SolverRep(redHandRep,blueHandRep,boardRep);
+
+          var redCardObject = {
+            top: 2,
+            left: 4,
+            right: 6,
+            bottom: 8,
+            element: 'l',
+            modifier: 0,
+            color: 'red'
+          };
+          var blueCardObject = {
+            top: 1,
+            left: 2,
+            right: 3,
+            bottom: 4,
+            element: 'f',
+            modifier: -1,
+            color: 'red'
+          };
+          var middleBoardCardObject = {
+            top: 1,
+            left: 3,
+            right: 5,
+            bottom: 7,
+            element: 'w',
+            modifier: 1,
+            color: 'red'
+          };
+
+          var redHandRepObject = {
+            cards: [redCardObject],
+            color: "red"
+          }
+          var blueHandRepObject = {
+            cards: [blueCardObject],
+            color: "blue"
+          }
+
+          var boardCardObjects = [
+            Array(),
+            Array(),
+            Array()
+          ]
+          boardCardObjects[1][1] = middleBoardCardObject;
+
+          var boardObject = {
+            cards: boardCardObjects,
+            rules: ['same','plus','rank']
+          };
+
+          var expectedSolverObject = {
+            redHand: redHandRepObject,
+            blueHand: blueHandRepObject,
+            board: boardObject
+          }
+          var solverObject = solverRep.objectify();
+
+          assert.deepEqual(solverObject, solverObject, 'The object representation should have matched');
+        });
+      });
+    </script>
+
+  </body>
+</html>

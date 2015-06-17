@@ -1,0 +1,24 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<script>
+  SolverRep = Polymer({
+    is: 'solver-rep',
+    properties: {
+      redHand: Object,
+      blueHand: Object,
+      board: Object
+    },
+    factoryImpl: function(redHand,blueHand,board) {
+      this.redHand = redHand;
+      this.blueHand = blueHand;
+      this.board = board;
+    },
+    objectify: function () {
+      return {
+        redHand: this.redHand.objectify(),
+        blueHand: this.blueHand.objectify(),
+        board: this.board.objectify()
+      };
+    }
+  });
+</script>
