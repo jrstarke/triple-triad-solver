@@ -79,20 +79,37 @@
   	Polymer({
   		is: "triad-board",
       properties: {
-        rules: Array
+        rules: Array,
+        afterDrop: Object
       },
   		allowDrop: function (e) {
   			e.preventDefault();
   		},
   		drop: function (e) {
   			e.preventDefault();
-  			var draggedElement = triad_solver.dragged_element;
+
+        var draggedElement = triad_solver.dragged_element;
 
   			var dropElement = e.target;
   			var cell = dropElement.parentElement;
 
-  			cell.insertBefore(draggedElement, dropElement);
-  			cell.removeChild(dropElement);
+        var row = null;
+        var column = null;
+
+        var cells = this.getElementsByClassName('triad-board cell');
+        for (var index = 0; index < cells.length; index++) {
+          if (cells[index] == cell) {
+            row = Math.floor(index / 3);
+            column = index % 3;
+            break;
+          }
+        }
+
+        this.placeCard(draggedElement,row,column);
+
+        if (this.afterDrop) {
+          this.afterDrop();
+        }
   		},
       placeCard: function (card, row, column) {
         var cells = this.getElementsByClassName('triad-board cell');

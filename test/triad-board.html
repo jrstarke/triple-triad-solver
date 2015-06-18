@@ -80,7 +80,7 @@
       }
 
       suite('<triad-board>', function() {
-        test('accept drop', function () {
+        test('accept drop', function (done) {
           var board = getBoardElement();
           var card = getCardElement();
 
@@ -95,7 +95,9 @@
             preventDefault: function () {},
             target: dropzone
           };
-
+          board.afterDrop = function () {
+            done();
+          };
           board.drop(event);
 
           assert.equal(card.parentElement, cell, 'The card should now be in the board cell');
