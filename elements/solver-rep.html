@@ -19,6 +19,21 @@
         blueHand: this.blueHand.objectify(),
         board: this.board.objectify()
       };
+    },
+    getCardCounts: function () {
+      return [this.redHand.getCardCounts(),this.blueHand.getCardCounts(),this.board.getCardCounts()].map(function(colorCounts) {
+        return Object.keys(colorCounts).map(function(color) {
+          return {
+            color: color,
+            sum: colorCounts[color]
+          };
+        });
+      }).reduce(function (a,b) {
+        return a.concat(b);
+      },[]).reduce(function (colorCounts,aColorCount) {
+        colorCounts[aColorCount.color] = (colorCounts[aColorCount.color] || 0) + aColorCount.sum
+        return colorCounts;
+      },{});
     }
   });
 </script>
