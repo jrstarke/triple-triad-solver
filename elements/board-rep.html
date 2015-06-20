@@ -57,7 +57,7 @@
         });
       }).reduce(function (a,b) {
         return a.concat(b);
-      }).reduce(function (previous,current) {
+      },[]).reduce(function (previous,current) {
         previous[current.color] = (previous[current.color] || 0) + current.sum
         return previous;
       },{});
