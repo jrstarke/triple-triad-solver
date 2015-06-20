@@ -118,7 +118,110 @@
             blue: 1
           }
 
-          assert.deepEqual(expectedCounts, solverRep.getCardCounts(), 'The object representation should have matched');
+          assert.deepEqual(expectedCounts, solverRep.getCardCounts(), 'The card counts should have been 2 red 1 blue');
+        });
+        test('get card proposals: 1 card left', function () {
+
+          var topCenterCard = new CardRep(9,3,6,7,"",0,'red');
+          var centerLeftCard = new CardRep(3,3,4,5,"",0,'blue');
+
+          var blueCard = new CardRep(1,5,3,3,"",0,'blue');
+
+          var cards = [
+            [null,topCenterCard,null],
+            [centerLeftCard,null,null],
+            [null,null,null]
+          ];
+          
+          var rulesInPlay = ['same'];
+          var boardRep = new BoardRep(cards,rulesInPlay);
+
+          var redHandRep = new HandRep([],"red");
+          var blueHandRep = new HandRep([blueCard],"blue");
+
+          var solverRep = new SolverRep(redHandRep,blueHandRep,boardRep);
+
+          var expectedProposal = {
+            row: 0,
+            column: 0,
+            index: 0,
+            score: 3
+          }
+
+          assert.deepEqual(expectedProposal, solverRep.proposePlay(), 'The solver should have proposed top left');
+        });
+        test('negamax: base case', function () {
+          var topCenterCard = new CardRep(9,3,6,7,"",0,'red');
+          var centerLeftCard = new CardRep(3,3,4,5,"",0,'blue');
+
+          var blueCard = new CardRep(1,5,3,3,"",0,'blue');
+
+          var cards = [
+            [null,topCenterCard,null],
+            [centerLeftCard,null,null],
+            [null,null,null]
+          ];
+          
+          var rulesInPlay = ['same'];
+          var boardRep = new BoardRep(cards,rulesInPlay);
+
+          var redHandRep = new HandRep([],"red");
+          var blueHandRep = new HandRep([blueCard],"blue");
+
+          var solverRep = new SolverRep(redHandRep,blueHandRep,boardRep);
+
+          var expectedProposal = {
+            row: 0,
+            column: 0,
+            index: 0,
+            score: 3
+          }
+          
+          var state = {
+            board: boardRep,
+            thisHand: blueHandRep,
+            otherHand: redHandRep
+          }
+
+          assert.deepEqual(expectedProposal, solverRep.negamax(state,1), 'The solver should have proposed top left');
+        });
+        test('negamax: defensive', function () {
+          var topCenterCard = new CardRep(9,3,6,7,"",0,'red');
+          var centerLeftCard = new CardRep(3,3,4,5,"",0,'blue');
+
+          var blueCard = new CardRep(7,1,7,1,"",0,'blue');
+          var redCard = new CardRep(7,7,7,7,"",0,'red');
+          
+          var rulesInPlay = ['same','plus','rank'];
+
+          var cards = [
+            [null,null,null],
+            [null,null,null],
+            [null,null,null]
+          ];
+          var boardRep = new BoardRep(cards,rulesInPlay);
+
+          var redHandRep = new HandRep([redCard],"red");
+          var blueHandRep = new HandRep([blueCard],"blue");
+
+          var solverRep = new SolverRep(redHandRep,blueHandRep,boardRep);
+
+          var expectedProposal = {
+            row: 2,
+            column: 0,
+            index: 0,
+            score: 1
+          }
+          
+          var state = {
+            board: boardRep,
+            thisHand: blueHandRep,
+            otherHand: redHandRep
+          }
+
+          var bestPlay = solverRep.negamax(state,1);
+
+          assert.deepEqual(expectedProposal, bestPlay, 'The solver should have proposed bottom left');
         });
       });
     </script>

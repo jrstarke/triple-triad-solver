@@ -34,6 +34,56 @@
         colorCounts[aColorCount.color] = (colorCounts[aColorCount.color] || 0) + aColorCount.sum
         return colorCounts;
       },{});
+    },
+    proposePlay: function () {
+      var state = {
+        board: this.board,
+        thisHand: this.blueHand,
+        otherHand: this.redHand
+      };
+
+      return this.negamax(state,1);
+    },
+    negamax: function (state, color) {
+      var self = this;
+
+      var availableCards = state.thisHand.availableCards();
+      var availableSpaces = state.board.getAvailableSpaces();
+
+      if (availableCards.length < 1 || availableSpaces.length < 1) {
+        var boardScores = state.board.getCardCounts();
+        return {
+          score: color * (boardScores.blue || 0)
+        };
+      }
+      else {
+        return availableCards.map(function (availableCard) {
+          return availableSpaces.map(function (availableSpace) {
+            var boardClone = state.board.clone();
+            var thisHandClone = state.thisHand.clone();
+            boardClone.placeCard(thisHandClone.playCard(availableCard.position), availableSpace.row, availableSpace.column);
+
+            var result = self.negamax({
+              board: boardClone,
+              thisHand: state.otherHand,
+              otherHand: thisHandClone
+            },-color);
+
+            return {
+              row: availableSpace.row,
+              column: availableSpace.column,
+              index: availableCard.position,
+              score: -result.score
+            };
+          });
+        }).reduce(function (a,b) {
+          return a.concat(b);
+        },[]).reduce(function (previous, current) {
+          if (current.score > previous.score)
+            return current;
+          return previous;
+        });
+      }
     }
   });
 </script>
