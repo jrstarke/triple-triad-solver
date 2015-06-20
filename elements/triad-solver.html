@@ -9,18 +9,41 @@
     .horizontal {
       @apply(--layout-horizontal)
     }
+    .vertical {
+      @apply(--layout-vertical)
+    }
 	</style>
 
   <template>
-    <div class="horizontal">
-      <triad-hand class="red" color="red"></triad-hand>
-      <triad-board></triad-board>
-      <triad-hand class="blue" color="blue"></triad-hand>
+    <div class="vertical">
+      <div class="horizontal">
+        <triad-hand class="red" color="red"></triad-hand>
+        <triad-board rules="{{rules}}"></triad-board>
+        <triad-hand class="blue" color="blue"></triad-hand>
+      </div>
+      <div class="score"><span class="red"></div>
     </div>
   </template>
   <script>
   	Polymer({
-  		is: "triad-solver"
+  		is: "triad-solver",
+      properties: {
+        rules: {
+          type: Array
+        },
+      },
+      factoryImpl: function(redHand, blueHand, board) {
+        this.redHand = redHand;
+        this.blueHand = blueHand;
+        this.board = board;
+      },
+      rep: function () {
+        var redHand = this.$$('triad-hand.red');
+        var blueHand = this.$$('triad-hand.blue');
+        var board = this.$$('triad-board');
+
+        return new SolverRep(redHand.rep(),blueHand.rep(),board.rep());
+      }
   	});
   </script>
 </dom-module>

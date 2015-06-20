@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../elements/triad-solver.html">
+    <link rel="import" href="../elements/triad-card.html">
+    <link rel="import" href="../elements/card-rep.html">
+    <link rel="import" href="../elements/board-rep.html">
+    <link rel="import" href="../elements/hand-rep.html">
+    <link rel="import" href="../elements/solver-rep.html">
+  </head>
+  <body>
+
+    <div class="test-rep" style="display: none;">
+      <triad-solver id="test-rep-solver" rules='["same","plus","rank"]'></triad-solver>
+
+      <triad-card id="test-rep-card-1" top="1" left="2" right="3" bottom="4" element="f" color="red"></triad-card>
+      <triad-card id="test-rep-card-2" top="2" left="4" right="6" bottom="8" element="w" color="blue"></triad-card>
+      <triad-card id="test-rep-card-3" top="1" left="3" right="5" bottom="7" element="l" color="red"></triad-card>
+    </div>
+
+    <script>
+      suite('<triad-solver>', function() {
+        test('rep', function () {
+          var solver = document.getElementById("test-rep-solver");
+
+          var card1 = document.getElementById("test-rep-card-1");
+          var card2 = document.getElementById("test-rep-card-2");
+          var card3 = document.getElementById("test-rep-card-3");
+
+          var redHand = solver.$$('triad-hand.red').$$('.hand');
+          redHand.innerHTML = "";
+          redHand.appendChild(card1);
+
+          var blueHand = solver.$$('triad-hand.blue').$$('.hand');
+          blueHand.innerHTML = "";
+          blueHand.appendChild(card2);
+
+          var boardCells = solver.$$('triad-board').querySelectorAll(".cell");
+          var middleCell = boardCells[4];
+
+          middleCell.innerHTML = "";
+          middleCell.appendChild(card3);
+
+          var card1Rep = new CardRep(1,2,3,4,'f',0,'red');
+          var card2Rep = new CardRep(2,4,6,8,'w',0,'blue');
+          var card3Rep = new CardRep(1,3,5,7,'l',0,'red');
+
+          var redHandRep = new HandRep([card1Rep],"red");
+          var blueHandRep = new HandRep([card2Rep],"blue");
+
+          var boardCards = [
+            Array(3),
+            Array(3),
+            Array(3)
+          ]
+          boardCards[1][1] = card3Rep;
+
+          var boardRep = new BoardRep(boardCards,['same','plus','rank']);
+
+          var expected = new SolverRep(redHandRep,blueHandRep,boardRep);
+
+          var solverRep = solver.rep()
+
+          assert.deepEqual(solverRep.objectify(), expected.objectify(), 'The solver rep did not have the expected result');
+        });
+        
+      });
+    </script>
+  </body>
+</html>
