@@ -37,6 +37,7 @@
         blueScore: Number
       },
       attached: function() {
+        this.rules = ['same','plus','rank'];
         this.async(function() {
           this.updateScores();
           this.$.board.afterDrop = this.playCard.bind(this);
