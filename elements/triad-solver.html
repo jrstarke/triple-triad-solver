@@ -3,6 +3,7 @@
 
 <link rel="import" href="triad-hand.html" />
 <link rel="import" href="triad-board.html" />
+<link rel="import" href="solver-rep.html" />
 
 <dom-module id="triad-solver">
 	<style>
@@ -12,30 +13,54 @@
     .vertical {
       @apply(--layout-vertical)
     }
+    .score {
+      @apply(--layout-center)
+    }
 	</style>
 
   <template>
     <div class="vertical">
       <div class="horizontal">
         <triad-hand class="red" color="red"></triad-hand>
-        <triad-board rules="{{rules}}"></triad-board>
+        <triad-board id="board" rules="{{rules}}"></triad-board>
         <triad-hand class="blue" color="blue"></triad-hand>
       </div>
-      <div class="score"><span class="red"></div>
+      <div class="score"><span class="red">{{redScore}}</span>-<span class="blue">{{blueScore}}</span></div>
     </div>
   </template>
   <script>
   	Polymer({
   		is: "triad-solver",
       properties: {
-        rules: {
-          type: Array
-        },
+        rules: Array,
+        redScore: Number,
+        blueScore: Number
       },
-      factoryImpl: function(redHand, blueHand, board) {
-        this.redHand = redHand;
-        this.blueHand = blueHand;
-        this.board = board;
+      attached: function() {
+        this.async(function() {
+          this.updateScores();
+          this.$.board.afterDrop = this.playCard.bind(this);
+        });
+      },
+      updateScores: function () {
+        var solverRep = this.rep();
+
+        var counts = solverRep.getCardCounts();
+        this.redScore = counts.red;
+        this.blueScore = counts.blue;
+      },
+      playCard: function () {
+        var solverRep = this.rep();
+
+        var blueHand = this.$$('triad-hand.blue');
+        var board = this.$$('triad-board');
+
+        var proposedPlay = solverRep.proposePlay();
+        var card = blueHand.getCard(proposedPlay.index);
+
+        board.placeCard(card,proposedPlay.row, proposedPlay.column);
+        
+        this.updateScores();
       },
       rep: function () {
         var redHand = this.$$('triad-hand.red');

@@ -55,11 +55,7 @@
           var redHandRep = new HandRep([card1Rep],"red");
           var blueHandRep = new HandRep([card2Rep],"blue");
 
-          var boardCards = [
-            Array(3),
-            Array(3),
-            Array(3)
-          ]
+          var boardCards = Array.apply(null, Array(3)).map(function () {return Array.apply(null, Array(3));});
           boardCards[1][1] = card3Rep;
 
           var boardRep = new BoardRep(boardCards,['same','plus','rank']);

@@ -42,18 +42,20 @@
         otherHand: this.redHand
       };
 
-      return this.negamax(state,1);
+      return this.negamax(state,1,3);
     },
-    negamax: function (state, color) {
+    negamax: function (state, color, maxDepth) {
       var self = this;
 
       var availableCards = state.thisHand.availableCards();
       var availableSpaces = state.board.getAvailableSpaces();
 
-      if (availableCards.length < 1 || availableSpaces.length < 1) {
+      if (availableCards.length < 1 || availableSpaces.length < 1 || maxDepth < 1) {
         var boardScores = state.board.getCardCounts();
+        var thisHandScores = state.thisHand.getCardCounts();
+        var otherHandScores = state.otherHand.getCardCounts();
         return {
-          score: color * (boardScores.blue || 0)
+          score: color * ((boardScores.blue || 0) + (thisHandScores.blue || 0) + (otherHandScores.blue || 0))
         };
       }
       else {
@@ -66,8 +68,8 @@
             var result = self.negamax({
               board: boardClone,
               thisHand: state.otherHand,
-              otherHand: thisHandClone
-            },-color);
+              otherHand: thisHandClone,
+            },-color, maxDepth  - 1);
 
             return {
               row: availableSpace.row,
