@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="triad-card.html" />
-<link rel="import" href="board-rep.html" />
+<link rel="import" href="hand-rep.html" />
 
 <dom-module id="triad-hand">
   <style>
@@ -52,6 +52,13 @@
       }
       
       return cards;
+    },
+    getCard: function (position) {
+      return this.getCards().filter(function (cardPosition) {
+        return cardPosition.position == position;
+      }).map(function (cardPosition) {
+        return cardPosition.card;
+      })[0];
     },
     rep: function () {
         cards = this.getCards().map(function (cardPosition) {
