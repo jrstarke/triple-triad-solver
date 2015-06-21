@@ -11,10 +11,7 @@
       var size = 3;
 
       if (!cards) {
-        cards = [];
-        for (i = 0; i < size; i++) {
-          cards[i] = Array(size);
-        }
+        cards = Array.apply(null, Array(size)).map(function () {return Array.apply(null, Array(size));});
       }
 
       this.rules = rules || [];

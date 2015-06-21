@@ -239,11 +239,7 @@
           var boardRep = new BoardRep();
 
           expected = {
-            cards: [
-              new Array(3),
-              new Array(3),
-              new Array(3)
-            ],
+            cards: Array.apply(null, Array(3)).map(function () {return Array.apply(null, Array(3));}),
             rules: []
           }
 
@@ -287,11 +283,7 @@
           var boardRep = new BoardRep();
 
           var expected = {
-            cards: [
-              new Array(3),
-              new Array(3),
-              new Array(3)
-            ],
+            cards: Array.apply(null, Array(3)).map(function () {return Array.apply(null, Array(3));}),
             rules: []
           };
 
