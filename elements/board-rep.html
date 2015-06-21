@@ -107,10 +107,10 @@
       this.cards[row][column] = card;
       return this.runPlacement(row, column);
     },
-    flipCard: function (row, column) {
+    flipCard: function (row, column, noFlipColor) {
       var card = this.cards[row][column];
 
-      if (card) {
+      if (card && card.color != noFlipColor) {
         card.flip();
       }
     },
@@ -119,6 +119,7 @@
 
       var flipSets = [];
       var card = boardRep.cards[row][column];
+      var playingColor = card.color;
 
       var currentCalculations = [];
       if (card) {
@@ -169,7 +170,7 @@
         });
 
         flips.forEach(function (flipPosition) {
-          boardRep.flipCard(flipPosition.row, flipPosition.column);
+          boardRep.flipCard(flipPosition.row, flipPosition.column, playingColor);
         });
 
         if (flips.length > 0) {
