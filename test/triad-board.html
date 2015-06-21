@@ -155,11 +155,7 @@
           placeCard(card3,2,2);
           
 
-          var expected = [
-            Array(3),
-            Array(3),
-            Array(3)
-          ];
+          var expected = Array.apply(null, Array(3)).map(function () {return Array.apply(null, Array(3));});
           expected[0][0] = card1;
           expected[1][1] = card2;
           expected[2][2] = card3;
@@ -189,11 +185,7 @@
           placeCard(card2,1,1);
           placeCard(card3,2,2);
           
-          var cards = [
-            new Array(3),
-            new Array(3),
-            new Array(3)
-          ];
+          var cards = Array.apply(null, Array(3)).map(function () {return Array.apply(null, Array(3));});
           cards[0][0] = new CardRep();
           cards[1][1] = new CardRep();
           cards[2][2] = new CardRep();

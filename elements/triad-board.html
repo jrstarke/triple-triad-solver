@@ -134,11 +134,8 @@
         return flips;
       },
       cards2D: function () {
-        cards = [
-          Array(3),
-          Array(3),
-          Array(3)
-        ]
+        var size = 3;
+        cards = Array.apply(null, Array(size)).map(function () {return Array.apply(null, Array(size));});
 
         return this.getCards().reduce(function (cardDict, cardPosition) {
           cardDict[cardPosition.row][cardPosition.column] = cardPosition.card;
@@ -172,11 +169,7 @@
       },
   		rep: function () {
         var size = 3;
-
-        var cards = new Array(size);
-        for (var i = 0; i < size; i++) {
-          cards[i] = Array(size);
-        }
+        var cards = Array.apply(null, Array(size)).map(function () {return Array.apply(null, Array(size));});
 
         cards = this.getCards().map(function (cell) {
           cell.card = cell.card.rep();
